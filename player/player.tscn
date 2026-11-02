@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://jyncanbkjjnq"]
+[gd_scene format=3 uid="uid://jyncanbkjjnq"]
 
 [ext_resource type="Script" uid="uid://c1ra6l46652u8" path="res://player/player.gd" id="1_oul6g"]
 [ext_resource type="AudioStream" uid="uid://eqlentp01xuq" path="res://player/sounds/footsteps/footstep_1.wav" id="2_2ieo8"]
@@ -11,6 +11,9 @@
 [ext_resource type="AudioStream" uid="uid://b8j5dvefv2fmt" path="res://player/sounds/footsteps/footstep_8.wav" id="9_e7oew"]
 [ext_resource type="AudioStream" uid="uid://48xt4llun7t8" path="res://player/sounds/footsteps/footstep_9.wav" id="10_c35mf"]
 [ext_resource type="AudioStream" uid="uid://dly32slohyd7p" path="res://player/sounds/footsteps/footstep_10.wav" id="11_65viv"]
+[ext_resource type="Script" uid="uid://oxtgnm2b4dtn" path="res://player/interactor.gd" id="20_interactor"]
+[ext_resource type="Script" uid="uid://c1mxehww8ccch" path="res://player/held_item.gd" id="21_helditem"]
+[ext_resource type="Script" uid="uid://chpn3fvwe08oh" path="res://player/hud.gd" id="22_hud"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_oul6g"]
 radius = 0.4
@@ -25,53 +28,57 @@ top_radius = 0.05
 bottom_radius = 0.05
 height = 0.7
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" unique_id=446791658]
 script = ExtResource("1_oul6g")
 footstep_sound = Array[AudioStream]([ExtResource("2_2ieo8"), ExtResource("3_ebec5"), ExtResource("4_yllr7"), ExtResource("5_kb6p2"), ExtResource("6_wodsf"), ExtResource("7_32hag"), ExtResource("8_tqiix"), ExtResource("9_e7oew"), ExtResource("10_c35mf"), ExtResource("11_65viv")])
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=198187431]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.925, 0)
+cast_shadow = 0
 mesh = SubResource("CapsuleMesh_oul6g")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2022928122]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.925, 0)
 shape = SubResource("CapsuleShape3D_oul6g")
 
-[node name="HeadPosition" type="Node3D" parent="."]
+[node name="HeadPosition" type="Node3D" parent="." unique_id=1400065775]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 
-[node name="LandingAnimation" type="Node3D" parent="HeadPosition"]
+[node name="LandingAnimation" type="Node3D" parent="HeadPosition" unique_id=2014783724]
 unique_name_in_owner = true
 
-[node name="Camera3D" type="Camera3D" parent="HeadPosition/LandingAnimation"]
+[node name="Camera3D" type="Camera3D" parent="HeadPosition/LandingAnimation" unique_id=847493328]
 unique_name_in_owner = true
 
-[node name="OrientationIndicator" type="MeshInstance3D" parent="HeadPosition/LandingAnimation/Camera3D"]
+[node name="OrientationIndicator" type="MeshInstance3D" parent="HeadPosition/LandingAnimation/Camera3D" unique_id=155144246]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.35)
 cast_shadow = 0
 mesh = SubResource("CylinderMesh_oul6g")
 
-[node name="InteractRay" type="RayCast3D" parent="HeadPosition/LandingAnimation/Camera3D"]
+[node name="InteractRay" type="RayCast3D" parent="HeadPosition/LandingAnimation/Camera3D" unique_id=397264836]
 unique_name_in_owner = true
 target_position = Vector3(0, 0, -3)
+script = ExtResource("20_interactor")
 
-[node name="HoldPoint" type="Node3D" parent="HeadPosition/LandingAnimation/Camera3D"]
+[node name="HeldItem" type="Node3D" parent="HeadPosition/LandingAnimation/Camera3D" unique_id=1862548969]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, -0.25, -0.7)
+script = ExtResource("21_helditem")
 
-[node name="CeilingDetector" type="RayCast3D" parent="."]
+[node name="CeilingDetector" type="RayCast3D" parent="." unique_id=1626158465]
 target_position = Vector3(0, 2.1, 0)
 
-[node name="Crosshair" type="Control" parent="."]
+[node name="Crosshair" type="Control" parent="." unique_id=762798318]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="ColorRect" type="ColorRect" parent="Crosshair"]
+[node name="ColorRect" type="ColorRect" parent="Crosshair" unique_id=1673230618]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -84,9 +91,11 @@ offset_right = 6.0
 offset_bottom = 6.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
-[node name="ColorRect2" type="ColorRect" parent="Crosshair"]
+[node name="ColorRect2" type="ColorRect" parent="Crosshair" unique_id=185621269]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -99,7 +108,69 @@ offset_right = 3.0
 offset_bottom = 3.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="FootstepSound" type="AudioStreamPlayer" parent="."]
+[node name="HUD" type="Control" parent="." unique_id=1470618285]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("22_hud")
+
+[node name="PromptLabel" type="Label" parent="HUD" unique_id=1906290124]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = 24.0
+offset_right = 250.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+horizontal_alignment = 1
+
+[node name="HoldBar" type="ProgressBar" parent="HUD" unique_id=1010690220]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = 56.0
+offset_right = 80.0
+offset_bottom = 66.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+max_value = 1.0
+show_percentage = false
+
+[node name="HeldLabel" type="Label" parent="HUD" unique_id=1927805030]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -48.0
+offset_right = 600.0
+offset_bottom = -22.0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+
+[node name="FootstepSound" type="AudioStreamPlayer" parent="." unique_id=246310752]
 volume_db = -20.0
 max_polyphony = 10

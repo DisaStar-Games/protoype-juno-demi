@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://5w5r2e6fqk0o"]
+
+[ext_resource type="PackedScene" path="res://interactables/item_pickup.tscn" id="1_item"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_extinguisher"]
+albedo_color = Color(1, 0, 0.2, 1)
+roughness = 0.75
+
+[sub_resource type="BoxMesh" id="BoxMesh_extinguisher"]
+material = SubResource("StandardMaterial3D_extinguisher")
+size = Vector3(0.18, 0.5, 0.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_extinguisher"]
+size = Vector3(0.18, 0.5, 0.18)
+
+[node name="Extinguisher" unique_id=1502941756 instance=ExtResource("1_item")]
+item_id = &"extinguisher"
+display_name = "Extinguisher"
+
+[node name="MeshInstance3D" parent="." index="0"]
+mesh = SubResource("BoxMesh_extinguisher")
+
+[node name="CollisionShape3D" parent="." index="1"]
+shape = SubResource("BoxShape3D_extinguisher")

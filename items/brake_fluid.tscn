@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://interactables/item_pickup.tscn" id="1_item"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_brake_fluid"]
+albedo_color = Color(0.9, 0.8, 0.2, 1)
+roughness = 0.75
+
+[sub_resource type="BoxMesh" id="BoxMesh_brake_fluid"]
+material = SubResource("StandardMaterial3D_brake_fluid")
+size = Vector3(0.2, 0.3, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_brake_fluid"]
+size = Vector3(0.2, 0.3, 0.2)
+
+[node name="BrakeFluid" instance=ExtResource("1_item")]
+item_id = &"brake_fluid"
+display_name = "Brake fluid"
+
+[node name="MeshInstance3D" parent="." index="0"]
+mesh = SubResource("BoxMesh_brake_fluid")
+
+[node name="CollisionShape3D" parent="." index="1"]
+shape = SubResource("BoxShape3D_brake_fluid")

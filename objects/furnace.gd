@@ -18,7 +18,7 @@ func _ready() -> void:
 
 
 func _on_intake_body_entered(body: Node) -> void:
-	if body.is_in_group("coal"):
+	if body is ItemPickup and body.item_id == &"coal":
 		add_coal()
 		body.queue_free()
 

@@ -6,13 +6,13 @@
 
 ## 0. Current status (keep this section up to date)
 
-**Last updated:** after Milestone 0 + the coal/furnace prototype. Engine: Godot 4.7 (Forward Plus, Jolt Physics).
+**Last updated:** after Milestone 1 (interaction system). Engine: Godot 4.7 (Forward Plus, Jolt Physics).
 
 | Milestone | Status |
 |---|---|
 | 0 – Project & gray-box train | **Done** – `res://levels/TrainBlockout.tscn` |
-| 1 – Player & interaction | **Partial** – player exists, minimal interaction (see below); no `Interactor`/`HeldItem`/prompts/hold-interactions yet |
-| 2–10 | Not started |
+| 1 – Player & interaction | **Done** – `Interactable`, `Interactor`, `HeldItem`, `ItemPickup`, HUD prompts, hold-to-interact, 5 item types placed |
+| 2–10 | Not started (next: Milestone 2, `TrainState` + cockpit controls) |
 
 ### How to run it
 - Open `levels/TrainBlockout.tscn` in the editor and press **F6** (Run Current Scene). It is **not** the project's main scene yet.
@@ -21,21 +21,31 @@
 
 ### What exists today
 - **Player** – `res://player/player.tscn` + `player.gd`: first-person `CharacterBody3D` (WASD, mouse look, jump, crouch, walk, footsteps). This is the project's own controller and lives in `player/` as `player.gd`, not `Player.gd` as in the structure in section 4.
-- **Interaction (prototype)** – input action `interact` (**E**). A `RayCast3D` (`InteractRay`, 3 m) under the camera plus a `HoldPoint` node (bottom-right of view). Logic currently lives directly in `player.gd` (`try_interact`, `pick_up_coal`, `throw_coal`). It carries one item at a time. The crosshair turns yellow when something can be grabbed.
-- **Coal** – `res://objects/coal.tscn`: a `RigidBody3D` cube in group `coal`. While held it is frozen and its transform is driven to the hold point every physics frame (do not reparent it; a frozen rigidbody ignores its parent). Throwing re-enables physics and applies an impulse (`throw_force` 8, `throw_up` 3 in `player.gd`).
-- **Coal pile** – `res://objects/coal_pile.tscn` (group `coal_pile`). Press E on it with empty hands to get a fresh coal (`spawn_coal()`). Endless supply.
-- **Furnace** – `res://objects/furnace.tscn` + `furnace.gd`: block with a 3D progress bar above it. An `Intake` `Area3D` wraps the whole furnace; any `coal` body that enters is consumed and calls `add_coal()`. Progress rises by `fill_per_coal` (50) and decays at `decay_per_second` (4), max 100. All three are `@export`. The bar is not yet hooked to `TrainState` (does not exist yet).
+- **Controls** – WASD move, mouse look, **E** interact (hold E for hold-interactions), **LMB** throw the held item, **Q** drop it, Esc frees the cursor.
+- **Interaction system (Milestone 1)**
+  - `interactables/interactable.gd` – `class_name Interactable` (a `StaticBody3D`). Override `get_prompt(player)`, `can_interact(player)`, `interact(player)`, `interact_hold(player, delta)`; export `prompt_text` and `hold_time` (0 = press, >0 = hold E that many seconds). Use it for levers, buttons, the furnace-side things, repair points, etc.
+  - `interactables/item_pickup.gd` + `item_pickup.tscn` – `class_name ItemPickup` (a `RigidBody3D`, so it cannot extend `Interactable`; it implements the **same four methods** and the Interactor duck-types on `interact`). Exports: `item_id` (StringName), `display_name`, `throwable`. The base scene holds a real `MeshInstance3D` + `CollisionShape3D` (a plain yellow box).
+  - **Every item is its own scene in `items/` that inherits `item_pickup.tscn`** (`wrench`, `extinguisher`, `brake_fluid`, `shovel`, `coal`). Each sets its `item_id`/`display_name` and has its own mesh, shape and material, so open the scene in the editor and restyle it freely (replace the box mesh with anything, keep the collision roughly matching, keep the origin near the item's centre because that is what sits in the hand). To add an item: *New Inherited Scene* from `item_pickup.tscn`, save into `items/`, set the two exports, then drop it into a level as a normal scene instance.
+  - `player/interactor.gd` – `class_name Interactor`, attached to the camera's `InteractRay` (`RayCast3D`, 3 m). Finds the target under the crosshair, shows the prompt, runs press and hold interaction (hold must be released before it can fire again). Signals `prompt_changed`, `hold_progress_changed`. Exports `require_captured_mouse` (turn off only in headless tests, where the mouse can't be captured).
+  - `player/held_item.gd` – `class_name HeldItem`, the node at the bottom-right of the view. One item at a time. `pick_up()` (swaps if already holding), `drop()`, `throw()`, `consume()` (deletes the held item, for repairs). A held item is frozen with collision off and its transform is driven to this node every physics frame (**do not reparent it**; a frozen rigidbody ignores its parent). Exports `throw_force` 8, `throw_up` 3, `drop_speed` 1.5, `require_captured_mouse`. It reads LMB/Q in `_input` and all HUD `Control`s must keep `mouse_filter = Ignore`; otherwise Godot's GUI swallows the click before `_unhandled_input` sees it (this made LMB-throw silently do nothing once). Interactables reach it as `player.held_item`.
+  - `player/hud.gd` – prompt label, hold-progress bar, held-item label ("Holding: X  [LMB] throw  [Q] drop"), crosshair turns yellow on a usable target.
+- **Items placed in the train** – instances of the `items/` scenes under the `Items` node in `TrainBlockout.tscn`, so they can be selected and moved in the editor: Wrench (cockpit shelf), Extinguisher (Cabin A seat), Brake fluid (Cabin B crate), Shovel (by the furnace). They can be picked up, swapped, dropped and thrown but have **no function yet** (repairs come in Milestone 7, shovel in Milestone 3).
+- **Coal** – `res://items/coal.tscn`: an `ItemPickup` with `item_id = &"coal"`. Throwing re-enables physics and applies an impulse.
+- **Coal pile** – `res://objects/coal_pile.tscn`, an `Interactable` ("[E] Take coal", only usable with empty hands). Endless supply.
+- **Furnace** – `res://objects/furnace.tscn` + `furnace.gd`: block with a 3D progress bar above it. An `Intake` `Area3D` wraps the whole furnace; any `ItemPickup` with `item_id == &"coal"` that enters is consumed and calls `add_coal()`. Progress rises by `fill_per_coal` (50) and decays at `decay_per_second` (4), max 100. All three are `@export`. The bar is not yet hooked to `TrainState` (does not exist yet).
 - **Train scene** – `res://levels/TrainBlockout.tscn`: 40 m corridor along **+Z** (front window at z=0, back at z=40), 4 m wide and 4.5 m tall, five 8 m rooms (Cockpit, Cabin A, Cabin B cargo, Mechanical room, Gas chamber) joined by doorways. Built from `CSGBox3D`/`CSGCylinder3D` under a `Geometry` node, with `Label3D` names under `Labels` and one `OmniLight3D` per room under `Lights`. Night look: dark ambient, emissive blue window panels. Props: console, shelf, bed (cockpit); seats (Cabin A); crates (Cabin B); brake reservoir, coal pile, furnace (mechanical room); green pipes (gas chamber). The player spawns in the cockpit facing the front window.
 
 ### Deviations from this plan (decided with the project owner)
 - **Coal is thrown, not only shovelled.** Coal is a physics object the player grabs from a pile and throws into the furnace. The shovel (Milestone 3) may be added **alongside** throwing, not instead of it.
-- Player script is `player/player.gd` (not `Player.gd`), and interaction code is inline in it until Milestone 1 splits it into `Interactor`/`HeldItem`.
-- Objects live in `res://objects/` for now; the `interactables/` folder in section 4 does not exist yet.
+- **Script file names are snake_case** (`player.gd`, `interactor.gd`, `held_item.gd`), not PascalCase as in the structure in section 4; the `class_name`s are PascalCase as planned. `Interactor.gd`/`HeldItem.gd` live in `player/`, `Interactable`/`ItemPickup` in `interactables/`.
+- **`ItemPickup` does not extend `Interactable`** (rigid body vs static body); both share the same duck-typed API. New static interactables extend `Interactable`.
+- **Controls differ from the plan's input list:** **LMB (`use_item`) throws** the held item and **Q (`drop_item`) drops** it. Items that get their own use (extinguisher) should set `throwable = false` and use LMB for that instead.
+- The prototype objects (coal, coal pile, furnace) still live in `res://objects/`; reusable interactable bases are in `res://interactables/`.
 - `levels/TrainBlockout.tscn` was generated once from a script and is now the source of truth. Edit it directly in the editor; there is no generator to re-run.
 
 ### Tips for whoever picks this up
 - Colour code in the blockout: red = danger, yellow = item, blue = control, orange = fire, green = gas.
-- Headless check used so far: `godot --headless --quit --editor --path .` to import, then run a scene for a few frames and look for `SCRIPT ERROR`. Scripted tests via `godot --headless -s <script.gd>` work for checking throw/furnace behaviour.
+- Headless check used so far: `godot --headless --quit --editor --path .` to import, then run a scene for a few frames and look for `SCRIPT ERROR`. Scripted tests via `godot --headless -s <script.gd>` work for checking throw/furnace/interaction behaviour (extend `SceneTree`, load the train scene, call `interact()` on nodes, await timers). Headless can't capture the mouse, so set `Interactor.require_captured_mouse = false` in such tests. After adding a new `class_name`, run the import command once so it is registered.
 
 ---
 
@@ -161,8 +171,8 @@ res://
 
 **Done when:** you can open the scene and see a readable, labelled train interior.
 
-### Milestone 1 — Player & interaction system  🟡 PARTIAL
-> Done: first-person player, E interact ray, pickup/throw of coal, hold point. Missing: generic `Interactable` base class, HUD prompts, drop/swap, other items, hold interactions. Refactor the inline code in `player.gd` into `Interactor`/`HeldItem` when continuing.
+### Milestone 1 — Player & interaction system  ✅ DONE
+> Verified with a scripted headless test (pickup, swap, drop, throw into furnace, raycast prompt, press and hold interaction, no re-fire while held). Still untested by hand in a real window; playtest the HUD layout.
 
 1. First-person `CharacterBody3D` with mouse look, walk, collision.
 2. `Interactor`: RayCast3D from camera (~2 m), detects `Interactable`, shows prompt in HUD ("[E] Pick up wrench").

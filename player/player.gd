@@ -14,32 +14,25 @@ var landing_velocity
 var distance = 0
 var footstep_distance = 2.1
 
-# --- Coal carrying ---
-var held_coal: RigidBody3D = null
-var throw_force := 8.0
-var throw_up := 3.0
-
+## What the player is carrying. Interactables reach it as `player.held_item`.
+@onready var held_item: HeldItem = %HeldItem
 @onready var camera: Camera3D = %Camera3D
-@onready var interact_ray: RayCast3D = %InteractRay
-@onready var hold_point: Node3D = %HoldPoint
-@onready var crosshair_dot: ColorRect = $Crosshair/ColorRect2
 
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	# Don't let our own capsule block the interaction ray when looking down.
-	interact_ray.add_exception(self)
 
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
-	if event is InputEventMouseButton and event.pressed:
+	if event is InputEventMouseButton and event.pressed \
+			and Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
+		# This click only recaptures the cursor; it must not also throw or interact.
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-
-	if event.is_action_pressed("interact"):
-		try_interact()
+		get_viewport().set_input_as_handled()
+		return
 
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		rotation_degrees.y -= event.relative.x / 10
@@ -97,10 +90,6 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-	# Keep carried coal pinned to the hand position (it's frozen, so we drive it).
-	if held_coal != null:
-		held_coal.global_transform = hold_point.global_transform
-
 
 func landing_animation(landing_velocity):
 	if landing_velocity >= 2:
@@ -117,75 +106,3 @@ func play_random_footstep_sound() -> void:
 	if footstep_sound.size() > 0:
 		$FootstepSound.stream = footstep_sound.pick_random()
 		$FootstepSound.play()
-
-
-# --- Coal interaction ---------------------------------------------------------
-
-func _process(_delta: float) -> void:
-	# Highlight the crosshair when our hands are empty and a coal is in reach.
-	var can_grab := held_coal == null and (get_aimed_coal() != null or get_aimed_pile() != null)
-	crosshair_dot.color = Color.YELLOW if can_grab else Color.WHITE
-
-
-func try_interact() -> void:
-	# E throws the coal we're holding, or grabs a loose coal / one from the pile.
-	if held_coal != null:
-		throw_coal()
-		return
-
-	var coal := get_aimed_coal()
-	if coal == null:
-		var pile := get_aimed_pile()
-		if pile != null:
-			coal = pile.spawn_coal()
-	if coal != null:
-		pick_up_coal(coal)
-
-
-## The coal the crosshair is currently resting on, or null.
-func get_aimed_coal() -> RigidBody3D:
-	var collider := get_aimed_collider()
-	if collider is RigidBody3D and collider.is_in_group("coal"):
-		return collider
-	return null
-
-
-## The coal pile the crosshair is currently resting on, or null.
-func get_aimed_pile() -> Node:
-	var collider := get_aimed_collider()
-	if collider != null and collider.is_in_group("coal_pile"):
-		return collider
-	return null
-
-
-func get_aimed_collider() -> Object:
-	interact_ray.force_raycast_update()
-	if not interact_ray.is_colliding():
-		return null
-	return interact_ray.get_collider()
-
-
-func pick_up_coal(coal: RigidBody3D) -> void:
-	held_coal = coal
-	# Freeze it and pull it out of collision so it rides cleanly in our hand.
-	# We leave it in the world tree and drive its transform in _physics_process.
-	coal.freeze = true
-	coal.collision_layer = 0
-	coal.collision_mask = 0
-	coal.global_transform = hold_point.global_transform
-
-
-func throw_coal() -> void:
-	var coal := held_coal
-	held_coal = null
-
-	# Re-enable physics from its current in-hand position.
-	coal.collision_layer = 1
-	coal.collision_mask = 1
-	coal.freeze = false
-	coal.linear_velocity = Vector3.ZERO
-	coal.angular_velocity = Vector3.ZERO
-
-	# Fling it along the camera aim with a slight upward lob.
-	var forward := -camera.global_transform.basis.z
-	coal.apply_central_impulse(forward * throw_force + Vector3.UP * throw_up)

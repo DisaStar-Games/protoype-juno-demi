@@ -1,12 +1,16 @@
-extends StaticBody3D
+extends Interactable
 
-## Endless coal source: the player grabs a fresh coal cube straight from the pile.
+## Endless coal source: takes a fresh coal cube straight from the pile into the hand.
 
 @export var coal_scene: PackedScene
 
 
-func spawn_coal() -> RigidBody3D:
-	var coal := coal_scene.instantiate() as RigidBody3D
+func can_interact(player: Node) -> bool:
+	return player.held_item.is_empty()
+
+
+func interact(player: Node) -> void:
+	var coal := coal_scene.instantiate() as ItemPickup
 	get_tree().current_scene.add_child(coal)
 	coal.global_position = global_position + Vector3(0, 0.8, 0)
-	return coal
+	player.held_item.pick_up(coal)

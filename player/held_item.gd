@@ -1,0 +1,83 @@
+class_name HeldItem
+extends Node3D
+
+## The player's hand: holds at most one ItemPickup and keeps it at this node's position.
+## Lives under the camera, so the item follows where the player looks.
+
+signal changed(item: ItemPickup)
+
+@export var throw_force := 8.0
+@export var throw_up := 3.0
+@export var drop_speed := 1.5
+
+## Ignore throw/drop while the cursor is free (Esc). Off only for headless tests.
+@export var require_captured_mouse := true
+
+var item: ItemPickup = null
+
+
+func is_empty() -> bool:
+	return item == null
+
+
+# _input (not _unhandled_input) so a HUD Control can never swallow the click.
+func _input(event: InputEvent) -> void:
+	if require_captured_mouse and Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
+		return
+	if event.is_action_pressed("use_item"):
+		throw()
+	elif event.is_action_pressed("drop_item"):
+		drop()
+
+
+func _physics_process(_delta: float) -> void:
+	if item == null:
+		return
+	if not is_instance_valid(item):
+		item = null
+		changed.emit(null)
+		return
+	# The held body is frozen, so we drive its transform ourselves.
+	item.global_transform = global_transform
+
+
+## Takes the item into the hand. Anything already held is dropped first (swap).
+func pick_up(new_item: ItemPickup) -> void:
+	if item != null:
+		drop()
+	item = new_item
+	item.set_held(true)
+	item.global_transform = global_transform
+	changed.emit(item)
+
+
+func drop() -> void:
+	var dropped := _release()
+	if dropped != null:
+		dropped.linear_velocity = -global_transform.basis.z * drop_speed
+
+
+func throw() -> void:
+	if item == null or not item.throwable:
+		return
+	var thrown := _release()
+	thrown.apply_central_impulse(-global_transform.basis.z * throw_force + Vector3.UP * throw_up)
+
+
+## Removes and deletes the held item (e.g. used up by a repair).
+func consume() -> void:
+	var used := item
+	item = null
+	changed.emit(null)
+	if used != null:
+		used.queue_free()
+
+
+func _release() -> ItemPickup:
+	if item == null:
+		return null
+	var released := item
+	item = null
+	released.set_held(false)
+	changed.emit(null)
+	return released
