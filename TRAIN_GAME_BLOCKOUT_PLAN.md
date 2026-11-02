@@ -4,6 +4,41 @@
 
 ---
 
+## 0. Current status (keep this section up to date)
+
+**Last updated:** after Milestone 0 + the coal/furnace prototype. Engine: Godot 4.7 (Forward Plus, Jolt Physics).
+
+| Milestone | Status |
+|---|---|
+| 0 – Project & gray-box train | **Done** – `res://levels/TrainBlockout.tscn` |
+| 1 – Player & interaction | **Partial** – player exists, minimal interaction (see below); no `Interactor`/`HeldItem`/prompts/hold-interactions yet |
+| 2–10 | Not started |
+
+### How to run it
+- Open `levels/TrainBlockout.tscn` in the editor and press **F6** (Run Current Scene). It is **not** the project's main scene yet.
+- `scenes/main.tscn` is the older flat test world (crates, ramp, sun light). It still has the furnace and coal, and is useful as a sandbox.
+- **Esc** frees the mouse cursor, a click recaptures it. Close the window normally.
+
+### What exists today
+- **Player** – `res://player/player.tscn` + `player.gd`: first-person `CharacterBody3D` (WASD, mouse look, jump, crouch, walk, footsteps). This is the project's own controller and lives in `player/` as `player.gd`, not `Player.gd` as in the structure in section 4.
+- **Interaction (prototype)** – input action `interact` (**E**). A `RayCast3D` (`InteractRay`, 3 m) under the camera plus a `HoldPoint` node (bottom-right of view). Logic currently lives directly in `player.gd` (`try_interact`, `pick_up_coal`, `throw_coal`). It carries one item at a time. The crosshair turns yellow when something can be grabbed.
+- **Coal** – `res://objects/coal.tscn`: a `RigidBody3D` cube in group `coal`. While held it is frozen and its transform is driven to the hold point every physics frame (do not reparent it; a frozen rigidbody ignores its parent). Throwing re-enables physics and applies an impulse (`throw_force` 8, `throw_up` 3 in `player.gd`).
+- **Coal pile** – `res://objects/coal_pile.tscn` (group `coal_pile`). Press E on it with empty hands to get a fresh coal (`spawn_coal()`). Endless supply.
+- **Furnace** – `res://objects/furnace.tscn` + `furnace.gd`: block with a 3D progress bar above it. An `Intake` `Area3D` wraps the whole furnace; any `coal` body that enters is consumed and calls `add_coal()`. Progress rises by `fill_per_coal` (50) and decays at `decay_per_second` (4), max 100. All three are `@export`. The bar is not yet hooked to `TrainState` (does not exist yet).
+- **Train scene** – `res://levels/TrainBlockout.tscn`: 40 m corridor along **+Z** (front window at z=0, back at z=40), 4 m wide and 4.5 m tall, five 8 m rooms (Cockpit, Cabin A, Cabin B cargo, Mechanical room, Gas chamber) joined by doorways. Built from `CSGBox3D`/`CSGCylinder3D` under a `Geometry` node, with `Label3D` names under `Labels` and one `OmniLight3D` per room under `Lights`. Night look: dark ambient, emissive blue window panels. Props: console, shelf, bed (cockpit); seats (Cabin A); crates (Cabin B); brake reservoir, coal pile, furnace (mechanical room); green pipes (gas chamber). The player spawns in the cockpit facing the front window.
+
+### Deviations from this plan (decided with the project owner)
+- **Coal is thrown, not only shovelled.** Coal is a physics object the player grabs from a pile and throws into the furnace. The shovel (Milestone 3) may be added **alongside** throwing, not instead of it.
+- Player script is `player/player.gd` (not `Player.gd`), and interaction code is inline in it until Milestone 1 splits it into `Interactor`/`HeldItem`.
+- Objects live in `res://objects/` for now; the `interactables/` folder in section 4 does not exist yet.
+- `levels/TrainBlockout.tscn` was generated once from a script and is now the source of truth. Edit it directly in the editor; there is no generator to re-run.
+
+### Tips for whoever picks this up
+- Colour code in the blockout: red = danger, yellow = item, blue = control, orange = fire, green = gas.
+- Headless check used so far: `godot --headless --quit --editor --path .` to import, then run a scene for a few frames and look for `SCRIPT ERROR`. Scripted tests via `godot --headless -s <script.gd>` work for checking throw/furnace behaviour.
+
+---
+
 ## 1. Concept summary (from the design sketches)
 
 The player is the lone driver of a train at night, delivering cargo before a **delivery timer** runs out. They drive from the **cockpit** (throttle, brake, horn, boost, radio, track switch) and must leave the cockpit to walk through the **cabins** to fix problems (fuel the boiler, refill brake fluid, put out fires, repair gas leaks). The longer they're away from the controls, the more can go wrong ahead on the track. Walking through cabins can also trigger scary encounters (trespassers, hallucinations).
@@ -117,7 +152,7 @@ res://
 
 ## 5. Step-by-step milestones
 
-### Milestone 0 — Project & gray-box train
+### Milestone 0 — Project & gray-box train  ✅ DONE
 1. Create Godot 4 project, folders above, input map.
 2. Build `TrainBlockout.tscn` as one long box corridor split into rooms with doorways, front to back:
    **Cockpit** (desk/console, window, shelf, bed) → **Cabin A** (seats) → **Cabin B** (cargo/crates) → **Mechanical room** (furnace, brake reservoir, coal pile) → **Gas chamber** (pipes on walls).
@@ -126,7 +161,9 @@ res://
 
 **Done when:** you can open the scene and see a readable, labelled train interior.
 
-### Milestone 1 — Player & interaction system
+### Milestone 1 — Player & interaction system  🟡 PARTIAL
+> Done: first-person player, E interact ray, pickup/throw of coal, hold point. Missing: generic `Interactable` base class, HUD prompts, drop/swap, other items, hold interactions. Refactor the inline code in `player.gd` into `Interactor`/`HeldItem` when continuing.
+
 1. First-person `CharacterBody3D` with mouse look, walk, collision.
 2. `Interactor`: RayCast3D from camera (~2 m), detects `Interactable`, shows prompt in HUD ("[E] Pick up wrench").
 3. `HeldItem` system: pick up, drop, swap; show held item name in HUD and as a simple box in front of the camera.
@@ -146,7 +183,7 @@ res://
 
 ### Milestone 3 — Core loop: fuel, coal, delivery timer
 1. Fuel drains proportional to speed. At 0 the train coasts to a stop.
-2. **Shovelling coal**: pick up shovel → interact with coal pile (shovel now "loaded") → interact with furnace → fuel increases. Optional hold-to-shovel.
+2. **Coal into the furnace**: **already prototyped as throwing** (grab coal from the pile, throw it into the furnace; see section 0). In this milestone, connect the furnace's `add_coal()` to `TrainState.fuel` (+20 per coal). Shovelling (shovel → pile → furnace, optional hold-to-shovel) may be added as a second way, **without removing throwing**.
 3. `GameState`: delivery timer counts down; route length is fixed (e.g. 5000 units). Reach the end → **win screen**. Timer hits zero → **lose screen** ("Late delivery").
 4. Restart button on end screens.
 
@@ -232,7 +269,7 @@ Notes:
 
 ## 7. Open design questions (decide later; don't block the blockout)
 - What exactly happens on collision: instant game over or damage system?
-- Is the train coal-powered (furnace) or fuel-powered (refuel)? Sketches show both — demo supports both: coal for the furnace, fuel can for boost.
+- Is the train coal-powered (furnace) or fuel-powered (refuel)? Sketches show both — demo supports both: coal for the furnace, fuel can for boost. (Coal is thrown into the furnace; decided.)
 - What is the info the player gives the track regulator?
 - What do bandits do if they catch you — rob cargo, or board and become trespassers?
 - What's in the "gas chamber" area beyond the leak?
@@ -246,3 +283,4 @@ Notes:
 - Every event must be **force-triggerable from the debug panel**.
 - Use only primitive meshes, Label3D and placeholder colors (red = danger, yellow = item, blue = control, orange = fire, green = gas).
 - Ask before adding new mechanics not in this document.
+- **After finishing any milestone or deviating from this plan, update section 0 (status table, "What exists today", "Deviations")** so the next person is up to speed.
