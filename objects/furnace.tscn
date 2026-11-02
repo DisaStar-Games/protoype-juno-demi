@@ -1,0 +1,63 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://objects/furnace.gd" id="1_furnace"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
+albedo_color = Color(0.18, 0.17, 0.19, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="BoxMesh_body"]
+material = SubResource("StandardMaterial3D_body")
+size = Vector3(2, 3, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_body"]
+size = Vector3(2, 3, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_barbg"]
+shading_mode = 0
+albedo_color = Color(0.08, 0.08, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_barbg"]
+material = SubResource("StandardMaterial3D_barbg")
+size = Vector3(1.7, 0.3, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fill"]
+shading_mode = 0
+albedo_color = Color(0.96, 0.55, 0.14, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fill"]
+material = SubResource("StandardMaterial3D_fill")
+size = Vector3(1.5, 0.2, 0.12)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_intake"]
+size = Vector3(3.6, 4.5, 3.6)
+
+[node name="Furnace" type="StaticBody3D"]
+script = ExtResource("1_furnace")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("BoxMesh_body")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_body")
+
+[node name="ProgressBar" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7, 0)
+
+[node name="BarBG" type="MeshInstance3D" parent="ProgressBar"]
+mesh = SubResource("BoxMesh_barbg")
+
+[node name="BarPivot" type="Node3D" parent="ProgressBar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0, 0.03)
+
+[node name="Fill" type="MeshInstance3D" parent="ProgressBar/BarPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0, 0)
+mesh = SubResource("BoxMesh_fill")
+
+[node name="Intake" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Intake"]
+shape = SubResource("BoxShape3D_intake")

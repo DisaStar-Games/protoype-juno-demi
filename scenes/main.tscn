@@ -1,3 +1,161 @@
 [gd_scene format=3 uid="uid://c472hvr5ood0l"]
 
-[node name="Node3D" type="Node3D" unique_id=226962779]
+[ext_resource type="PackedScene" uid="uid://jyncanbkjjnq" path="res://player/player.tscn" id="1_o5qli"]
+[ext_resource type="PackedScene" path="res://objects/coal.tscn" id="2_coal"]
+[ext_resource type="PackedScene" path="res://objects/furnace.tscn" id="3_furnace"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_main"]
+sky_material = SubResource("ProceduralSkyMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_main"]
+background_mode = 2
+sky = SubResource("Sky_main")
+ambient_light_source = 3
+ambient_light_color = Color(0.7, 0.75, 0.85, 1)
+ambient_light_sky_contribution = 0.6
+tonemap_mode = 2
+ssao_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ground"]
+albedo_color = Color(0.32, 0.36, 0.33, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_ground"]
+material = SubResource("StandardMaterial3D_ground")
+size = Vector3(50, 1, 50)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ground"]
+size = Vector3(50, 1, 50)
+
+[sub_resource type="BoxMesh" id="BoxMesh_crate"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_boxA"]
+albedo_color = Color(0.75, 0.35, 0.28, 1)
+roughness = 0.7
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_crate"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_boxB"]
+albedo_color = Color(0.28, 0.45, 0.68, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_platform"]
+albedo_color = Color(0.55, 0.5, 0.42, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_platform"]
+material = SubResource("StandardMaterial3D_platform")
+size = Vector3(8, 1, 8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_platform"]
+size = Vector3(8, 1, 8)
+
+[node name="World" type="Node3D" unique_id=1767371596]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=109627725]
+environment = SubResource("Environment_main")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1590371038]
+transform = Transform3D(0.866025, 0, 0.5, 0.353553, 0.707107, -0.612372, -0.353553, 0.707107, 0.612372, 0, 10, 0)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="Ground" type="StaticBody3D" parent="." unique_id=591651758]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=1860020140]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+mesh = SubResource("BoxMesh_ground")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=1348715658]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_ground")
+
+[node name="CrateA" type="StaticBody3D" parent="." unique_id=656876594]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8209739, 1, -2)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CrateA" unique_id=29413206]
+mesh = SubResource("BoxMesh_crate")
+surface_material_override/0 = SubResource("StandardMaterial3D_boxA")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CrateA" unique_id=279612501]
+shape = SubResource("BoxShape3D_crate")
+
+[node name="CrateB" type="StaticBody3D" parent="." unique_id=1409596846]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, -5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CrateB" unique_id=2142459212]
+mesh = SubResource("BoxMesh_crate")
+surface_material_override/0 = SubResource("StandardMaterial3D_boxB")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CrateB" unique_id=816837763]
+shape = SubResource("BoxShape3D_crate")
+
+[node name="CrateC" type="StaticBody3D" parent="." unique_id=1262620905]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3, -5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CrateC" unique_id=356048926]
+mesh = SubResource("BoxMesh_crate")
+surface_material_override/0 = SubResource("StandardMaterial3D_boxA")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CrateC" unique_id=1785873554]
+shape = SubResource("BoxShape3D_crate")
+
+[node name="CrateD" type="StaticBody3D" parent="." unique_id=21018066]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1, 3)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CrateD" unique_id=662876508]
+mesh = SubResource("BoxMesh_crate")
+surface_material_override/0 = SubResource("StandardMaterial3D_boxB")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CrateD" unique_id=2093488859]
+shape = SubResource("BoxShape3D_crate")
+
+[node name="Platform" type="StaticBody3D" parent="." unique_id=443754261]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.5, -10)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Platform" unique_id=1687262411]
+mesh = SubResource("BoxMesh_platform")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Platform" unique_id=1039608847]
+shape = SubResource("BoxShape3D_platform")
+
+[node name="Ramp" type="StaticBody3D" parent="." unique_id=331804687]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, -8, 0.5, -3.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ramp" unique_id=1572319855]
+transform = Transform3D(1, 0, 0, 0, 0.9999973, -1.4901161e-08, 0, 1.4901161e-08, 0.9999973, 0, 0, 0)
+mesh = SubResource("BoxMesh_platform")
+surface_material_override/0 = SubResource("StandardMaterial3D_platform")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ramp" unique_id=1583661195]
+shape = SubResource("BoxShape3D_platform")
+
+[node name="Player" parent="." unique_id=1612968430 instance=ExtResource("1_o5qli")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 8)
+
+[node name="Furnace" parent="." unique_id=1875925665 instance=ExtResource("3_furnace")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
+
+[node name="Coal1" parent="." unique_id=1375331871 instance=ExtResource("2_coal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.2, 5)
+
+[node name="Coal2" parent="." unique_id=299641393 instance=ExtResource("2_coal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0.2, 4.2)
+
+[node name="Coal3" parent="." unique_id=798256314 instance=ExtResource("2_coal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.2, 4.4)
+
+[node name="Coal4" parent="." unique_id=1121803450 instance=ExtResource("2_coal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0.2, 5.4)
+
+[node name="Coal5" parent="." unique_id=868203716 instance=ExtResource("2_coal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 0.2, 6)
+
+[node name="Coal6" parent="." unique_id=1635564005 instance=ExtResource("2_coal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 0.2, 4)
