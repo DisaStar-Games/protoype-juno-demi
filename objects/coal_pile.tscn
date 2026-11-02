@@ -1,0 +1,43 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://objects/coal_pile.gd" id="1_pile"]
+[ext_resource type="PackedScene" path="res://objects/coal.tscn" id="2_coal"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pile"]
+albedo_color = Color(0.1, 0.1, 0.11, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_base"]
+material = SubResource("StandardMaterial3D_pile")
+size = Vector3(1.6, 0.5, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mid"]
+material = SubResource("StandardMaterial3D_pile")
+size = Vector3(1.1, 0.4, 1.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_top"]
+material = SubResource("StandardMaterial3D_pile")
+size = Vector3(0.6, 0.3, 0.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pile"]
+size = Vector3(1.6, 0.9, 1.6)
+
+[node name="CoalPile" type="StaticBody3D" groups=["coal_pile"]]
+script = ExtResource("1_pile")
+coal_scene = ExtResource("2_coal")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+mesh = SubResource("BoxMesh_base")
+
+[node name="Mid" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.94, 0, 0.342, 0, 1, 0, -0.342, 0, 0.94, 0, 0.7, 0)
+mesh = SubResource("BoxMesh_mid")
+
+[node name="Top" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.766, 0, -0.643, 0, 1, 0, 0.643, 0, 0.766, 0.05, 1.05, 0)
+mesh = SubResource("BoxMesh_top")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("BoxShape3D_pile")

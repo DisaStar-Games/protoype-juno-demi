@@ -123,30 +123,46 @@ func play_random_footstep_sound() -> void:
 
 func _process(_delta: float) -> void:
 	# Highlight the crosshair when our hands are empty and a coal is in reach.
-	var can_grab := held_coal == null and get_aimed_coal() != null
+	var can_grab := held_coal == null and (get_aimed_coal() != null or get_aimed_pile() != null)
 	crosshair_dot.color = Color.YELLOW if can_grab else Color.WHITE
 
 
 func try_interact() -> void:
-	# E picks up the coal we're looking at, or throws the one we're holding.
+	# E throws the coal we're holding, or grabs a loose coal / one from the pile.
 	if held_coal != null:
 		throw_coal()
-	else:
-		var coal := get_aimed_coal()
-		if coal != null:
-			pick_up_coal(coal)
+		return
+
+	var coal := get_aimed_coal()
+	if coal == null:
+		var pile := get_aimed_pile()
+		if pile != null:
+			coal = pile.spawn_coal()
+	if coal != null:
+		pick_up_coal(coal)
 
 
 ## The coal the crosshair is currently resting on, or null.
 func get_aimed_coal() -> RigidBody3D:
-	interact_ray.force_raycast_update()
-	if not interact_ray.is_colliding():
-		return null
-
-	var collider := interact_ray.get_collider()
+	var collider := get_aimed_collider()
 	if collider is RigidBody3D and collider.is_in_group("coal"):
 		return collider
 	return null
+
+
+## The coal pile the crosshair is currently resting on, or null.
+func get_aimed_pile() -> Node:
+	var collider := get_aimed_collider()
+	if collider != null and collider.is_in_group("coal_pile"):
+		return collider
+	return null
+
+
+func get_aimed_collider() -> Object:
+	interact_ray.force_raycast_update()
+	if not interact_ray.is_colliding():
+		return null
+	return interact_ray.get_collider()
 
 
 func pick_up_coal(coal: RigidBody3D) -> void:

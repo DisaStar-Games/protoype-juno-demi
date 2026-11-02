@@ -69,7 +69,7 @@ shadow_enabled = true
 [node name="Ground" type="StaticBody3D" parent="." unique_id=591651758]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=1860020140]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(0.999984, 0.003257472, 0.0046051075, -0.0032330984, 0.9999808, -0.005294684, -0.004622252, 0.005279723, 0.9999753, 0, -0.5, 0)
 mesh = SubResource("BoxMesh_ground")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=1348715658]
@@ -140,7 +140,7 @@ shape = SubResource("BoxShape3D_platform")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 8)
 
 [node name="Furnace" parent="." unique_id=1875925665 instance=ExtResource("3_furnace")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -8.7897215, 0, 5.44337)
 
 [node name="Coal1" parent="." unique_id=1375331871 instance=ExtResource("2_coal")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.2, 5)
