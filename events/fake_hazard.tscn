@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://events/fake_hazard.gd" id="1_event"]
+[ext_resource type="PackedScene" path="res://events/hazard_marker.tscn" id="2_marker"]
+
+[node name="FakeHazard" type="Node3D"]
+script = ExtResource("1_event")
+id = &"fake_hazard"
+category = 1
+silent = true
+warning_distance = 300.0
+cleanup_delay = 0.5
+
+[node name="HazardMarker" parent="." instance=ExtResource("2_marker")]

@@ -5,4 +5,5 @@ extends Interactable
 
 
 func interact(_player: Node) -> void:
+	TrainState.call_radio()
 	GameState.post_message("Radio: only static... the track regulator isn't answering yet.")

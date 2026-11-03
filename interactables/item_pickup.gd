@@ -11,9 +11,49 @@ extends RigidBody3D
 ## LMB throws it. Items with their own "use" (extinguisher) turn this off.
 @export var throwable := true
 @export var hold_time := 0.0
+## HUD hint for items with their own LMB action, e.g. "spray water" (see use_held below).
+@export var use_hint := ""
+
+## Where each kind of item started in the level: item id -> {scene, transform}. Events use
+## it to put a needed item back when it was used up or lost.
+static var _homes := {}
 
 var _saved_layer := 1
 var _saved_mask := 1
+
+
+func _ready() -> void:
+	add_to_group("item_%s" % item_id)
+	if not _homes.has(item_id) and scene_file_path != "":
+		_homes[item_id] = {"scene": scene_file_path, "transform": global_transform}
+
+
+func _physics_process(_delta: float) -> void:
+	# Fell out of the train (or the world): never leave a needed item unreachable.
+	if not freeze and global_position.y < -10.0:
+		return_home()
+
+
+## Puts the item back where it started.
+func return_home() -> void:
+	if _homes.has(item_id):
+		global_transform = _homes[item_id].transform
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
+
+
+## Makes sure at least one item with this id exists (held, lying around or placed): if
+## it was used up, a new one appears at its home spot.
+static func ensure_available(tree: SceneTree, wanted_id: StringName) -> void:
+	for node in tree.get_nodes_in_group("item_%s" % wanted_id):
+		if is_instance_valid(node) and not node.is_queued_for_deletion():
+			return
+	if not _homes.has(wanted_id):
+		return
+	var home: Dictionary = _homes[wanted_id]
+	var item := (load(home.scene) as PackedScene).instantiate() as ItemPickup
+	tree.current_scene.add_child(item)
+	item.global_transform = home.transform
 
 
 func get_prompt(player: Node) -> String:

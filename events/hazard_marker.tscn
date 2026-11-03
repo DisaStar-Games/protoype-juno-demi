@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://events/hazard_marker.gd" id="1_marker"]
+
+[node name="HazardMarker" type="Node3D"]
+script = ExtResource("1_marker")
+
+[node name="Pillar" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+
+[node name="Sign" type="Label3D" parent="."]
+cast_shadow = 0
+billboard = 1
+no_depth_test = true
+outline_size = 12
+text = "EVENT"
+font_size = 48

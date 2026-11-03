@@ -15,6 +15,8 @@ signal changed(item: ItemPickup)
 
 var item: ItemPickup = null
 
+var _using := false
+
 
 func is_empty() -> bool:
 	return item == null
@@ -30,15 +32,26 @@ func _input(event: InputEvent) -> void:
 		drop()
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if item == null:
 		return
 	if not is_instance_valid(item):
 		item = null
+		_using = false
 		changed.emit(null)
 		return
 	# The held body is frozen, so we drive its transform ourselves.
 	item.global_transform = global_transform
+
+	# Items with their own LMB action (the extinguisher) act while the button is held.
+	var cursor_ok := not require_captured_mouse or Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED
+	var wants_use := item.has_method("use_held") and cursor_ok and Input.is_action_pressed("use_item")
+	if wants_use:
+		var camera := get_parent() as Node3D
+		item.use_held(delta, camera.global_position, -camera.global_transform.basis.z)
+		_using = true
+	elif _using:
+		_stop_using(item)
 
 
 ## Takes the item into the hand. Anything already held is dropped first (swap).
@@ -70,13 +83,21 @@ func consume() -> void:
 	item = null
 	changed.emit(null)
 	if used != null:
+		_stop_using(used)
 		used.queue_free()
+
+
+func _stop_using(used: ItemPickup) -> void:
+	_using = false
+	if is_instance_valid(used) and used.has_method("stop_use"):
+		used.stop_use()
 
 
 func _release() -> ItemPickup:
 	if item == null:
 		return null
 	var released := item
+	_stop_using(released)
 	item = null
 	released.set_held(false)
 	changed.emit(null)

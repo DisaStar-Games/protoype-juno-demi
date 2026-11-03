@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://5w5r2e6fqk0o"]
 
 [ext_resource type="PackedScene" path="res://interactables/item_pickup.tscn" id="1_item"]
+[ext_resource type="Script" path="res://items/extinguisher.gd" id="2_script"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_extinguisher"]
 albedo_color = Color(1, 0, 0.2, 1)
@@ -13,12 +14,45 @@ size = Vector3(0.18, 0.5, 0.18)
 [sub_resource type="BoxShape3D" id="BoxShape3D_extinguisher"]
 size = Vector3(0.18, 0.5, 0.18)
 
+[sub_resource type="Gradient" id="Gradient_water"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.75, 0.9, 1, 0.9, 0.55, 0.75, 1, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_water"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_water"]
+material = SubResource("StandardMaterial3D_water")
+size = Vector3(0.09, 0.09, 0.09)
+
 [node name="Extinguisher" unique_id=1502941756 instance=ExtResource("1_item")]
 item_id = &"extinguisher"
 display_name = "Extinguisher"
+throwable = false
+use_hint = "spray water"
+script = ExtResource("2_script")
 
 [node name="MeshInstance3D" parent="." index="0"]
 mesh = SubResource("BoxMesh_extinguisher")
 
 [node name="CollisionShape3D" parent="." index="1"]
 shape = SubResource("BoxShape3D_extinguisher")
+
+[node name="Spray" type="CPUParticles3D" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -0.12)
+emitting = false
+amount = 90
+lifetime = 0.75
+local_coords = false
+mesh = SubResource("BoxMesh_water")
+direction = Vector3(0, 0.08, -1)
+spread = 5.0
+gravity = Vector3(0, -7, 0)
+initial_velocity_min = 8.0
+initial_velocity_max = 10.0
+scale_amount_min = 0.6
+scale_amount_max = 1.2
+color_ramp = SubResource("Gradient_water")

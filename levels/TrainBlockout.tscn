@@ -15,6 +15,11 @@
 [ext_resource type="PackedScene" path="res://cockpit/track_switch.tscn" id="15_switch"]
 [ext_resource type="PackedScene" path="res://cockpit/radio.tscn" id="16_radio"]
 [ext_resource type="PackedScene" path="res://world/outside.tscn" id="17_outside"]
+[ext_resource type="PackedScene" path="res://objects/brake_reservoir.tscn" id="18_reservoir"]
+[ext_resource type="PackedScene" path="res://objects/leak_point.tscn" id="19_leak"]
+[ext_resource type="Script" path="res://world/cabin_zone.gd" id="20_zone"]
+[ext_resource type="Script" path="res://characters/ghost_spawner.gd" id="21_ghosts"]
+[ext_resource type="PackedScene" path="res://characters/figure.tscn" id="22_figure"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
 sky_top_color = Color(0.015, 0.025, 0.08, 1)
@@ -366,12 +371,6 @@ use_collision = true
 size = Vector3(0.9, 0.9, 0.9)
 material = SubResource("Mat_crate")
 
-[node name="BrakeReservoir1" type="CSGBox3D" parent="Geometry" unique_id=1887804849]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.6, 30.6)
-use_collision = true
-size = Vector3(0.8, 1.2, 0.8)
-material = SubResource("Mat_console")
-
 [node name="Pipe1" type="CSGCylinder3D" parent="Geometry" unique_id=419730413]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -1.85, 1, 36)
 use_collision = true
@@ -721,7 +720,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.35, 1, 1.3)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 1, 1.3)
 
 [node name="Dashboard" parent="Controls" unique_id=1941502498 instance=ExtResource("12_dashboard")]
-transform = Transform3D(1, 0, 0, 0, 0.9848, 0.1736, 0, -0.1736, 0.9848, 0, 1.5, 0.9)
+transform = Transform3D(1, 0, 0, 0, 0.9848, 0.1736, 0, -0.1736, 0.9848, 0, 1.6, 0.9)
 
 [node name="HornButton" parent="Controls" unique_id=693182811 instance=ExtResource("13_horn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.85, 1, 1.55)
@@ -736,3 +735,56 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 1, 1.55)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 1, 1.55)
 
 [node name="Outside" parent="." unique_id=1666642192 instance=ExtResource("17_outside")]
+
+[node name="BrakeReservoir" parent="." instance=ExtResource("18_reservoir")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 30.6)
+
+[node name="LeakPoints" type="Node3D" parent="."]
+
+[node name="LeakPointA" parent="LeakPoints" instance=ExtResource("19_leak")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, 1, 34)
+
+[node name="LeakPointB" parent="LeakPoints" instance=ExtResource("19_leak")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 1.85, 1, 37.5)
+
+[node name="LeakPointC" parent="LeakPoints" instance=ExtResource("19_leak")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, 3.2, 36.5)
+
+[node name="LeakPointD" parent="LeakPoints" instance=ExtResource("19_leak")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 1.85, 3.2, 33.5)
+
+[node name="CabinZones" type="Node3D" parent="."]
+
+[node name="Cockpit" type="Node3D" parent="CabinZones"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 4)
+script = ExtResource("20_zone")
+zone_name = "Cockpit"
+encounters_allowed = false
+
+[node name="CabinA" type="Node3D" parent="CabinZones"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 12)
+script = ExtResource("20_zone")
+zone_name = "Cabin A"
+encounters_allowed = true
+
+[node name="CabinB" type="Node3D" parent="CabinZones"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 20)
+script = ExtResource("20_zone")
+zone_name = "Cabin B"
+encounters_allowed = true
+
+[node name="MechanicalRoom" type="Node3D" parent="CabinZones"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 28)
+script = ExtResource("20_zone")
+zone_name = "Mechanical room"
+encounters_allowed = false
+
+[node name="GasChamber" type="Node3D" parent="CabinZones"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 36)
+script = ExtResource("20_zone")
+zone_name = "Gas chamber"
+encounters_allowed = false
+
+[node name="GhostSpawner" type="Node" parent="."]
+script = ExtResource("21_ghosts")
+figure_scene = ExtResource("22_figure")

@@ -1,8 +1,8 @@
-extends CanvasLayer
+extends DebugWindow
 
-## F1 debug panel: live TrainState values, sliders to override them, and (from
-## Milestone 5) buttons to force any event. Autoload `DebugPanel`, hidden by default.
-## While open the cursor is free so the sliders can be used.
+## F1 debug panel: live TrainState values and sliders to override them. Events have
+## their own panel on F2 (ui/events_debug_panel.gd). Autoload `DebugPanel`, hidden by
+## default. While open the cursor is free so the sliders can be used.
 
 @onready var rows: VBoxContainer = %Rows
 
@@ -11,7 +11,6 @@ var _toggles := {}   # property name -> CheckBox
 var _warning_toggles := {}   # warning id -> CheckBox
 var _info: Label
 var _track_button: Button
-var _cursor_was_captured := false
 
 
 func _ready() -> void:
@@ -23,15 +22,6 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("debug_panel"):
 		toggle()
 		get_viewport().set_input_as_handled()
-
-
-func toggle() -> void:
-	visible = not visible
-	if visible:
-		_cursor_was_captured = Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	elif _cursor_was_captured:
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 
 func _process(_delta: float) -> void:
@@ -60,7 +50,7 @@ func _process(_delta: float) -> void:
 
 func _build() -> void:
 	var title := Label.new()
-	title.text = "DEBUG  (F1 to close)"
+	title.text = "DEBUG  (F1 to close, F2 for events)"
 	rows.add_child(title)
 
 	_info = Label.new()
@@ -72,6 +62,8 @@ func _build() -> void:
 	_add_slider("Speed", &"speed", 0.0, TrainState.max_speed * TrainState.boost_speed_multiplier, 0.5)
 	_add_slider("Fuel", &"fuel", 0.0, TrainState.max_fuel, 1.0)
 	_add_slider("Brake fluid", &"brake_fluid", 0.0, TrainState.max_brake_fluid, 1.0)
+	_add_slider("Furnace temp", &"furnace_temp", 0.0, TrainState.max_furnace_temp, 1.0)
+	_add_slider("Hallucination", &"hallucination_intensity", 0.0, 1.0, 0.01)
 
 	_add_toggle("Boost active", &"boost_active")
 	_add_toggle("Hallucinating", &"hallucinating")
@@ -106,11 +98,6 @@ func _build() -> void:
 	lose.text = "Force lose"
 	lose.pressed.connect(func() -> void: GameState.end_run(false, "Forced from debug panel"))
 	ends.add_child(lose)
-
-	rows.add_child(HSeparator.new())
-	var events := Label.new()
-	events.text = "Force events: added in Milestone 5"
-	rows.add_child(events)
 
 
 func _add_slider(title: String, prop: StringName, min_value: float, max_value: float, step: float) -> void:

@@ -10,6 +10,8 @@ signal time_left_changed(seconds: float)
 ## One-line status message for the HUD ("Track switch set to B"). Milestone 10 turns this into a log.
 signal message_posted(text: String)
 signal state_changed(state: State)
+## Seconds were taken off the timer (a failed event). The HUD flashes red on it.
+signal penalty_applied(seconds: float, reason: String)
 ## The run ended. `won` is true on arrival; `reason` is a short line for the end screen.
 signal game_over(won: bool, reason: String)
 
@@ -59,6 +61,16 @@ func end_run(won: bool, reason: String) -> void:
 
 func post_message(text: String) -> void:
 	message_posted.emit(text)
+
+
+## Takes seconds off the delivery timer. Running out ends the run on the next tick.
+func apply_time_penalty(seconds: float, reason: String) -> void:
+	if state != State.RUNNING:
+		return
+	time_left = maxf(time_left - seconds, 0.0)
+	time_left_changed.emit(time_left)
+	post_message("%s: -%d s" % [reason, roundi(seconds)])
+	penalty_applied.emit(seconds, reason)
 
 
 ## Back to a running run, same scene (the debug panel uses this).

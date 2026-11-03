@@ -38,7 +38,7 @@ func _process(delta: float) -> void:
 		_reset_hold()
 		return
 
-	var hold_time: float = target.hold_time
+	var hold_time := _hold_time_of(target)
 	if hold_time <= 0.0:
 		if Input.is_action_just_pressed("interact"):
 			if Input.is_action_pressed("alt_modifier") and target.has_method("interact_alt"):
@@ -75,7 +75,7 @@ func _find_target() -> Object:
 func _update_prompt() -> void:
 	var text := ""
 	if target != null:
-		var key := "[Hold E]" if target.hold_time > 0.0 else "[E]"
+		var key := "[Hold E]" if _hold_time_of(target) > 0.0 else "[E]"
 		text = "%s %s" % [key, target.get_prompt(player)]
 	if text != _prompt:
 		_prompt = text
@@ -87,3 +87,9 @@ func _reset_hold() -> void:
 		hold_progress_changed.emit(0.0)
 	_hold = 0.0
 	_hold_done = false
+
+
+func _hold_time_of(candidate: Object) -> float:
+	if candidate.has_method("get_hold_time"):
+		return candidate.get_hold_time(player)
+	return candidate.hold_time

@@ -19,6 +19,12 @@ func can_interact(_player: Node) -> bool:
 	return true
 
 
+## Seconds to hold E for this player. Override to make it depend on the player
+## (a repair point is an instant "you need X" press until the right item is held).
+func get_hold_time(_player: Node) -> float:
+	return hold_time
+
+
 func interact(_player: Node) -> void:
 	pass
 

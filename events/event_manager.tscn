@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://events/event_manager.gd" id="1_manager"]
+[ext_resource type="Resource" path="res://data/route_demo.tres" id="2_route"]
+[ext_resource type="PackedScene" path="res://events/test_event.tscn" id="3_test"]
+[ext_resource type="PackedScene" path="res://events/furnace_fire_event.tscn" id="4_fire"]
+[ext_resource type="PackedScene" path="res://events/brake_leak_event.tscn" id="5_brake"]
+[ext_resource type="PackedScene" path="res://events/gas_leak_event.tscn" id="6_gas"]
+[ext_resource type="PackedScene" path="res://events/trespasser_event.tscn" id="7_trespasser"]
+
+[node name="EventManager" type="Node"]
+script = ExtResource("1_manager")
+route = ExtResource("2_route")
+debug_events = Array[PackedScene]([ExtResource("3_test"), ExtResource("4_fire"), ExtResource("5_brake"), ExtResource("6_gas"), ExtResource("7_trespasser")])
+furnace_fire_event = ExtResource("4_fire")

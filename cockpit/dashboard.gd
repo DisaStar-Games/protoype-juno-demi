@@ -7,6 +7,7 @@ extends Node3D
 @onready var brake_fluid_gauge: Gauge = %BrakeFluidGauge
 @onready var timer_gauge: Gauge = %TimerGauge
 @onready var route_gauge: Gauge = %RouteGauge
+@onready var temp_gauge: Gauge = %TempGauge
 
 
 func _ready() -> void:
@@ -14,12 +15,14 @@ func _ready() -> void:
 	TrainState.fuel_changed.connect(_update_fuel)
 	TrainState.brake_fluid_changed.connect(_update_brake_fluid)
 	TrainState.distance_changed.connect(_update_route)
+	TrainState.furnace_temp_changed.connect(_update_temp)
 	GameState.time_left_changed.connect(_update_timer)
 
 	_update_speed(TrainState.speed)
 	_update_fuel(TrainState.fuel)
 	_update_brake_fluid(TrainState.brake_fluid)
 	_update_route(TrainState.distance)
+	_update_temp(TrainState.furnace_temp)
 	_update_timer(GameState.time_left)
 
 
@@ -43,3 +46,9 @@ func _update_route(distance: float) -> void:
 
 func _update_timer(seconds: float) -> void:
 	timer_gauge.set_value(0.0, GameState.format_time(seconds))
+
+
+func _update_temp(temp: float) -> void:
+	var ratio: float = temp / TrainState.max_furnace_temp
+	temp_gauge.set_value(ratio, "%d" % roundi(temp))
+	temp_gauge.set_fill_color(Gauge.heat_color(ratio))

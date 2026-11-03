@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://characters/vanish_burst.gd" id="1_burst"]
+
+[sub_resource type="Gradient" id="Gradient_burst"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_burst"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_burst"]
+material = SubResource("StandardMaterial3D_burst")
+size = Vector3(0.12, 0.12, 0.12)
+
+[node name="VanishBurst" type="CPUParticles3D"]
+emitting = false
+amount = 36
+lifetime = 0.9
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+mesh = SubResource("BoxMesh_burst")
+direction = Vector3(0, 1, 0)
+spread = 180.0
+gravity = Vector3(0, -3, 0)
+initial_velocity_min = 1.5
+initial_velocity_max = 3.5
+angle_max = 180.0
+scale_amount_min = 0.6
+scale_amount_max = 1.4
+color_ramp = SubResource("Gradient_burst")
+script = ExtResource("1_burst")

@@ -1,0 +1,57 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://characters/figure.gd" id="1_figure"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_leg"]
+size = Vector3(0.18, 0.7, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_torso"]
+size = Vector3(0.5, 0.7, 0.26)
+
+[sub_resource type="BoxMesh" id="BoxMesh_arm"]
+size = Vector3(0.12, 0.65, 0.14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_head"]
+size = Vector3(0.26, 0.28, 0.26)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eye"]
+size = Vector3(0.06, 0.045, 0.02)
+
+[node name="Figure" type="Node3D"]
+script = ExtResource("1_figure")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="LegL" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.35, 0)
+mesh = SubResource("BoxMesh_leg")
+
+[node name="LegR" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.35, 0)
+mesh = SubResource("BoxMesh_leg")
+
+[node name="Torso" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
+mesh = SubResource("BoxMesh_torso")
+
+[node name="ArmL" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.34, 1.0, 0)
+mesh = SubResource("BoxMesh_arm")
+
+[node name="ArmR" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.34, 1.0, 0)
+mesh = SubResource("BoxMesh_arm")
+
+[node name="Head" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.62, 0)
+mesh = SubResource("BoxMesh_head")
+
+[node name="EyeL" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.065, 1.65, -0.135)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_eye")
+
+[node name="EyeR" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.065, 1.65, -0.135)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_eye")

@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://events/trespasser_event.gd" id="1_event"]
+[ext_resource type="PackedScene" path="res://characters/figure.tscn" id="2_figure"]
+
+[node name="TrespasserEvent" type="Node3D"]
+script = ExtResource("1_event")
+id = &"trespasser"
+category = 0
+display_name = "Trespasser"
+warning_distance = 0.0
+fail_time_penalty = 20.0
+figure_scene = ExtResource("2_figure")

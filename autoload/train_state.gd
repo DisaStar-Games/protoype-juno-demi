@@ -13,10 +13,17 @@ signal distance_changed(distance: float)
 signal boost_changed(active: bool)
 signal track_changed(track: StringName)
 signal hallucinating_changed(active: bool)
-## Dashboard warning light turned on/off. Ids: &"brakes", &"fire", &"gas", &"fuel".
+signal hallucination_changed(intensity: float)
+signal furnace_temp_changed(temp: float)
+## The furnace reached its maximum temperature (EventManager answers with a fire).
+signal furnace_overheated
+signal furnace_fire_changed(active: bool)
+## Dashboard warning light turned on/off. Ids: &"brakes", &"fire", &"gas", &"fuel", &"temp".
 signal warning_changed(id: StringName, active: bool)
 ## The horn button was pressed. Track events (Milestone 6) judge the timing from `distance`.
 signal horn_sounded
+## The radio was used. Events can be resolved by calling the track regulator.
+signal radio_called
 
 @export_group("Speed")
 @export var max_speed := 30.0
@@ -38,6 +45,26 @@ signal horn_sounded
 @export var max_brake_fluid := 100.0
 ## Brake strength left when the fluid is completely empty (1 = unaffected).
 @export var empty_fluid_brake_factor := 0.1
+
+@export_group("Furnace")
+@export var max_furnace_temp := 100.0
+## Heat gained per second while the throttle is at 100 % (and there is fuel to burn).
+@export var heat_rate_full_throttle := 2.0
+## Heat gained per second while boost is on. Boost always heats the furnace, even
+## at a low throttle, so leaving it on always ends in an overheat.
+@export var heat_rate_boost := 6.0
+## Heat lost per second when neither of the above applies.
+@export var cool_rate := 5.0
+## The TEMP warning light comes on from this temperature.
+@export var high_temp_threshold := 70.0
+## Temperature the furnace drops back to once its fire is out.
+@export var temp_after_fire := 50.0
+## Top speed multiplier while the furnace is on fire (1 = no effect).
+@export var fire_power_factor := 0.5
+
+@export_group("Hallucinations")
+## Intensity lost per second once the gas leak is fixed.
+@export var hallucination_decay := 0.05
 
 @export_group("Warnings")
 ## The FUEL light comes on below this fuel level.
@@ -86,6 +113,23 @@ var brake_fluid := 0.0:
 			brake_fluid_changed.emit(brake_fluid)
 			_update_derived_warnings()
 
+## Furnace temperature, 0..max_furnace_temp. Rises with full throttle and boost.
+var furnace_temp := 0.0:
+	set(value):
+		value = clampf(value, 0.0, max_furnace_temp)
+		if not is_equal_approx(furnace_temp, value):
+			furnace_temp = value
+			furnace_temp_changed.emit(furnace_temp)
+			_update_derived_warnings()
+
+## True while the overheated furnace burns. Set by the furnace fire event.
+var furnace_on_fire := false:
+	set(value):
+		if furnace_on_fire != value:
+			furnace_on_fire = value
+			set_warning(&"fire", value)
+			furnace_fire_changed.emit(furnace_on_fire)
+
 ## Distance travelled along the route, in units.
 var distance := 0.0:
 	set(value):
@@ -106,17 +150,36 @@ var current_track: StringName = &"A":
 			current_track = value
 			track_changed.emit(current_track)
 
-var hallucinating := false:
+## How strongly the player is hallucinating, 0..1 (the gas leak raises it).
+var hallucination_intensity := 0.0:
 	set(value):
-		if hallucinating != value:
-			hallucinating = value
-			hallucinating_changed.emit(hallucinating)
+		value = clampf(value, 0.0, 1.0)
+		if not is_equal_approx(hallucination_intensity, value):
+			var was := hallucination_intensity > 0.0
+			hallucination_intensity = value
+			hallucination_changed.emit(hallucination_intensity)
+			if was != (hallucination_intensity > 0.0):
+				hallucinating_changed.emit(hallucination_intensity > 0.0)
 
+## Convenience on/off view of the intensity (setting it true means a medium 0.5).
+var hallucinating: bool:
+	get:
+		return hallucination_intensity > 0.0
+	set(value):
+		hallucination_intensity = 0.5 if value else 0.0
+
+## True while a gas leak feeds the hallucinations; otherwise they fade out by themselves.
+var gas_leaking := false
 
 ## Set by GameState when the run ends: the train stops simulating (speed and fuel hold).
 var frozen := false
 
-var _warnings := {&"brakes": false, &"fire": false, &"gas": false, &"fuel": false}
+# Warning lights: an id is lit when an event forces it (set_warning) or the level of
+# something derives it (low fuel, low brake fluid, hot furnace).
+var _forced := {&"brakes": false, &"fire": false, &"gas": false, &"fuel": false, &"temp": false}
+var _derived := {&"brakes": false, &"fire": false, &"gas": false, &"fuel": false, &"temp": false}
+var _warnings := {&"brakes": false, &"fire": false, &"gas": false, &"fuel": false, &"temp": false}
+var _overheat_announced := false
 
 
 func _ready() -> void:
@@ -148,6 +211,36 @@ func simulate(delta: float) -> void:
 	if speed > 0.0 and fuel > 0.0:
 		fuel -= fuel_drain_at_max_speed * (speed / max_speed) * delta
 
+	_simulate_furnace(delta)
+
+	if not gas_leaking and hallucination_intensity > 0.0:
+		hallucination_intensity -= hallucination_decay * delta
+
+
+## Full throttle and boost heat the furnace (only while there is fuel to burn); it cools
+## down otherwise. At the maximum it overheats, which the fire event answers.
+func _simulate_furnace(delta: float) -> void:
+	var heat := 0.0
+	if fuel > 0.0:
+		if throttle >= 0.99:
+			heat += heat_rate_full_throttle
+		if boost_active:
+			heat += heat_rate_boost
+
+	if furnace_on_fire:
+		furnace_temp = max_furnace_temp # keeps burning at the top until it is put out
+	elif heat > 0.0:
+		furnace_temp += heat * delta
+	else:
+		furnace_temp -= cool_rate * delta
+
+	if furnace_temp >= max_furnace_temp:
+		if not furnace_on_fire and not _overheat_announced:
+			_overheat_announced = true
+			furnace_overheated.emit()
+	else:
+		_overheat_announced = false
+
 
 ## Speed of the scenery rushing past the windows (and the camera rumble): the train's
 ## speed, but 0 once the run has ended.
@@ -156,7 +249,8 @@ func world_speed() -> float:
 
 
 func effective_max_speed() -> float:
-	return max_speed * (boost_speed_multiplier if boost_active else 1.0)
+	var top := max_speed * (boost_speed_multiplier if boost_active else 1.0)
+	return top * (fire_power_factor if furnace_on_fire else 1.0)
 
 
 ## 1 with a full reservoir, down to `empty_fluid_brake_factor` with an empty one.
@@ -172,12 +266,18 @@ func sound_horn() -> void:
 	horn_sounded.emit()
 
 
-## Turns a dashboard warning light on or off. FUEL and BRAKES are also driven by the
-## fuel / brake-fluid levels; FIRE and GAS are only set by events (Milestones 5-7).
+func call_radio() -> void:
+	radio_called.emit()
+
+
+## Forces a dashboard warning light on or off (events use this). The light also stays
+## on while its level-based condition holds: FUEL below `low_fuel_threshold`, BRAKES
+## below `low_brake_fluid_threshold`, TEMP from `high_temp_threshold`.
 func set_warning(id: StringName, active: bool) -> void:
-	if _warnings.get(id, active) != active:
-		_warnings[id] = active
-		warning_changed.emit(id, active)
+	if not _warnings.has(id):
+		return
+	_forced[id] = active
+	_refresh_warning(id)
 
 
 func is_warning(id: StringName) -> bool:
@@ -185,8 +285,18 @@ func is_warning(id: StringName) -> bool:
 
 
 func _update_derived_warnings() -> void:
-	set_warning(&"fuel", fuel < low_fuel_threshold)
-	set_warning(&"brakes", brake_fluid < low_brake_fluid_threshold)
+	_derived[&"fuel"] = fuel < low_fuel_threshold
+	_derived[&"brakes"] = brake_fluid < low_brake_fluid_threshold
+	_derived[&"temp"] = furnace_temp >= high_temp_threshold
+	for id in _warnings:
+		_refresh_warning(id)
+
+
+func _refresh_warning(id: StringName) -> void:
+	var lit: bool = _forced[id] or _derived[id]
+	if _warnings[id] != lit:
+		_warnings[id] = lit
+		warning_changed.emit(id, lit)
 
 
 ## Back to a fresh run (also used by the debug panel).
@@ -196,10 +306,14 @@ func reset() -> void:
 	brake = 0.0
 	fuel = start_fuel
 	brake_fluid = max_brake_fluid
+	furnace_on_fire = false
+	furnace_temp = 0.0
+	_overheat_announced = false
 	distance = 0.0
 	boost_active = false
 	current_track = &"A"
-	hallucinating = false
-	set_warning(&"fire", false)
-	set_warning(&"gas", false)
+	gas_leaking = false
+	hallucination_intensity = 0.0
+	for id in _forced:
+		_forced[id] = false
 	_update_derived_warnings()

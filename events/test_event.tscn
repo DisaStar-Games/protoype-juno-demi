@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://events/test_event.gd" id="1_event"]
+[ext_resource type="PackedScene" path="res://events/hazard_marker.tscn" id="2_marker"]
+
+[node name="TestEvent" type="Node3D"]
+script = ExtResource("1_event")
+id = &"test_hazard"
+display_name = "Test hazard"
+category = 1
+
+[node name="HazardMarker" parent="." instance=ExtResource("2_marker")]
