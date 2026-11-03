@@ -41,7 +41,10 @@ func _process(delta: float) -> void:
 	var hold_time: float = target.hold_time
 	if hold_time <= 0.0:
 		if Input.is_action_just_pressed("interact"):
-			target.interact(player)
+			if Input.is_action_pressed("alt_modifier") and target.has_method("interact_alt"):
+				target.interact_alt(player)
+			else:
+				target.interact(player)
 		elif Input.is_action_pressed("interact"):
 			target.interact_hold(player, delta)
 		return

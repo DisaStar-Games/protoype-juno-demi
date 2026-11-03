@@ -1,0 +1,54 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://cockpit/gauge.gd" id="1_gauge"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_plate"]
+albedo_color = Color(0.09, 0.1, 0.13, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_plate"]
+material = SubResource("StandardMaterial3D_plate")
+size = Vector3(0.66, 0.32, 0.02)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_track"]
+shading_mode = 0
+albedo_color = Color(0.02, 0.02, 0.03, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_track"]
+material = SubResource("StandardMaterial3D_track")
+size = Vector3(0.56, 0.06, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fill"]
+size = Vector3(0.56, 0.045, 0.01)
+
+[node name="Gauge" type="Node3D"]
+script = ExtResource("1_gauge")
+
+[node name="Plate" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_plate")
+
+[node name="Title" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0.012)
+pixel_size = 0.002
+modulate = Color(0.75, 0.8, 0.9, 1)
+outline_size = 4
+text = "GAUGE"
+font_size = 40
+
+[node name="Bar" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, 0.012)
+mesh = SubResource("BoxMesh_track")
+
+[node name="BarPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28, -0.01, 0.018)
+
+[node name="Fill" type="MeshInstance3D" parent="BarPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28, 0, 0)
+mesh = SubResource("BoxMesh_fill")
+
+[node name="Value" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0.012)
+pixel_size = 0.002
+outline_size = 4
+text = "0"
+font_size = 44

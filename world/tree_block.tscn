@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_leaf"]
+albedo_color = Color(0.05, 0.09, 0.07, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_trunk"]
+material = SubResource("StandardMaterial3D_leaf")
+size = Vector3(0.5, 3, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_canopy"]
+material = SubResource("StandardMaterial3D_leaf")
+size = Vector3(3, 4, 3)
+
+[node name="TreeBlock" type="Node3D"]
+
+[node name="Trunk" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("BoxMesh_trunk")
+
+[node name="Canopy" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+mesh = SubResource("BoxMesh_canopy")

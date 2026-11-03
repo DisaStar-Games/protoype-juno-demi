@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://interactables/lever.tscn" id="1_lever"]
+
+[node name="ThrottleLever" instance=ExtResource("1_lever")]
+property = &"throttle"
+title = "Throttle"

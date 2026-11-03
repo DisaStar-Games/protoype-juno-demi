@@ -23,6 +23,11 @@ func interact(_player: Node) -> void:
 	pass
 
 
+## Shift+E. Levers use it to step down; by default it does the same as `interact`.
+func interact_alt(player: Node) -> void:
+	interact(player)
+
+
 ## Called every frame while E is held on this target (optional).
 func interact_hold(_player: Node, _delta: float) -> void:
 	pass

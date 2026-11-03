@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://jyncanbkjjnq"]
 
+[ext_resource type="Script" path="res://player/camera_shake.gd" id="23_shake"]
 [ext_resource type="Script" uid="uid://c1ra6l46652u8" path="res://player/player.gd" id="1_oul6g"]
 [ext_resource type="AudioStream" uid="uid://eqlentp01xuq" path="res://player/sounds/footsteps/footstep_1.wav" id="2_2ieo8"]
 [ext_resource type="AudioStream" uid="uid://by8dmshhu4ejq" path="res://player/sounds/footsteps/footstep_2.wav" id="3_ebec5"]
@@ -50,6 +51,7 @@ unique_name_in_owner = true
 
 [node name="Camera3D" type="Camera3D" parent="HeadPosition/LandingAnimation" unique_id=847493328]
 unique_name_in_owner = true
+script = ExtResource("23_shake")
 
 [node name="OrientationIndicator" type="MeshInstance3D" parent="HeadPosition/LandingAnimation/Camera3D" unique_id=155144246]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.35)
@@ -156,6 +158,21 @@ grow_vertical = 2
 mouse_filter = 2
 max_value = 1.0
 show_percentage = false
+
+[node name="MessageLabel" type="Label" parent="HUD"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_top = 40.0
+offset_right = 320.0
+offset_bottom = 66.0
+grow_horizontal = 2
+horizontal_alignment = 1
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
 
 [node name="HeldLabel" type="Label" parent="HUD" unique_id=1927805030]
 unique_name_in_owner = true

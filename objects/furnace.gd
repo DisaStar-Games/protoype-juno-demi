@@ -1,20 +1,16 @@
 extends StaticBody3D
 
-## Blockout furnace: coal pushes the progress bar up, idle time lets it fall.
-
-@export var fill_per_coal := 50.0
-@export var decay_per_second := 4.0
-@export var max_progress := 100.0
-
-var progress := 0.0
+## Blockout furnace: coal adds to TrainState.fuel and the bar shows the fuel level.
 
 @onready var bar_pivot: Node3D = $ProgressBar/BarPivot
 @onready var intake: Area3D = $Intake
 
 
 func _ready() -> void:
-	# Any coal thrown through the intake zone gets eaten and fuels the bar.
+	# Any coal thrown through the intake zone gets eaten and fuels the train.
 	intake.body_entered.connect(_on_intake_body_entered)
+	TrainState.fuel_changed.connect(_on_fuel_changed)
+	_on_fuel_changed(TrainState.fuel)
 
 
 func _on_intake_body_entered(body: Node) -> void:
@@ -23,15 +19,11 @@ func _on_intake_body_entered(body: Node) -> void:
 		body.queue_free()
 
 
-## Fuels the furnace by one coal's worth of progress.
+## Fuels the train by one coal's worth.
 func add_coal() -> void:
-	progress = min(progress + fill_per_coal, max_progress)
+	TrainState.add_fuel(TrainState.fuel_per_coal)
 
 
-func _process(delta: float) -> void:
-	if progress > 0.0:
-		progress = max(progress - decay_per_second * delta, 0.0)
-
-	# Bar grows from its left edge; never scale to exactly 0 (avoids zero-basis).
-	var t := progress / max_progress
-	bar_pivot.scale.x = max(t, 0.0001)
+func _on_fuel_changed(fuel: float) -> void:
+	# Bar grows from its left edge; never scale to exactly 0 (avoids a zero basis).
+	bar_pivot.scale.x = maxf(fuel / TrainState.max_fuel, 0.0001)
