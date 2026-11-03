@@ -61,4 +61,4 @@ func _process(_delta: float) -> void:
 	# Sign: on a fixed line of sight, scaled so it keeps the same apparent size.
 	sign_label.position.y = eye_position.y + eye_distance * tan(deg_to_rad(sign_elevation_degrees))
 	sign_label.pixel_size = eye_distance * sign_angular_size / sign_label.font_size
-	sign_label.text = "%s\n%d u" % [event.display_name.to_upper(), maxi(0, roundi(remaining))]
+	sign_label.text = event.sign_text()

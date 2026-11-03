@@ -56,6 +56,11 @@ func remaining_distance() -> float:
 
 # --- Hooks for subclasses ------------------------------------------------------
 
+## Text on the beacon sign (see HazardMarker); the default is the name and distance.
+func sign_text() -> String:
+	return "%s\n%d u" % [display_name.to_upper(), maxi(0, roundi(remaining_distance()))]
+
+
 ## Messages posted on the HUD; return "" to stay quiet.
 func warning_message() -> String:
 	return "Warning: %s ahead!" % display_name
@@ -167,3 +172,12 @@ func _apply_failure_consequences() -> void:
 func _announce(text: String) -> void:
 	if text != "" and not silent:
 		GameState.post_message(text)
+
+
+## Screen and camera effects for a crash or a hit: red flash, glitch and a camera kick.
+func crash_effects(strength := 1.0) -> void:
+	ScreenEffects.flash(Color(0.9, 0.1, 0.1), 0.55 * strength, 0.6)
+	ScreenEffects.glitch(strength, 0.6)
+	var player := get_tree().get_first_node_in_group("player")
+	if player != null and player.camera.has_method("kick"):
+		player.camera.kick(strength, 0.6 + 0.8 * strength)

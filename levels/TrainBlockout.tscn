@@ -17,9 +17,10 @@
 [ext_resource type="PackedScene" path="res://world/outside.tscn" id="17_outside"]
 [ext_resource type="PackedScene" path="res://objects/brake_reservoir.tscn" id="18_reservoir"]
 [ext_resource type="PackedScene" path="res://objects/leak_point.tscn" id="19_leak"]
-[ext_resource type="Script" path="res://world/cabin_zone.gd" id="20_zone"]
-[ext_resource type="Script" path="res://characters/ghost_spawner.gd" id="21_ghosts"]
+[ext_resource type="Script" uid="uid://bn3mql1lgxgk8" path="res://world/cabin_zone.gd" id="20_zone"]
+[ext_resource type="Script" uid="uid://bhg8dku2cqhbh" path="res://characters/ghost_spawner.gd" id="21_ghosts"]
 [ext_resource type="PackedScene" path="res://characters/figure.tscn" id="22_figure"]
+[ext_resource type="PackedScene" path="res://objects/system_repair_point.tscn" id="23_repair"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
 sky_top_color = Color(0.015, 0.025, 0.08, 1)
@@ -591,7 +592,7 @@ text = "Console"
 font_size = 48
 
 [node name="Label7" type="Label3D" parent="Labels" unique_id=310778698]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 2.1, 4.5)
+transform = Transform3D(-0.2963097, 0, 0, 0, 0.31673282, 0, 0, 0, 0.54503524, -1.5, 2.5945742, 3.9676738)
 pixel_size = 0.01
 billboard = 1
 modulate = Color(1, 0.9, 0.3, 1)
@@ -703,10 +704,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 3.3)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75, 1.72, 4.5)
 
 [node name="Extinguisher" parent="Items" unique_id=640045230 instance=ExtResource("5_extinguisher")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0.77, 14)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6597688, 1.9274144, 3.260779)
+spray_range = 5.0
+extinguish_rate = 40.0
 
 [node name="BrakeFluid" parent="Items" unique_id=1846868131 instance=ExtResource("6_brake_fluid")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 1.37, 18)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6930226, 1.8081871, 3.8848457)
 
 [node name="Shovel" parent="Items" unique_id=759063019 instance=ExtResource("7_shovel")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0.1, 26.8)
@@ -736,55 +739,73 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 1, 1.55)
 
 [node name="Outside" parent="." unique_id=1666642192 instance=ExtResource("17_outside")]
 
-[node name="BrakeReservoir" parent="." instance=ExtResource("18_reservoir")]
+[node name="BrakeReservoir" parent="." unique_id=1038434591 instance=ExtResource("18_reservoir")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 30.6)
 
-[node name="LeakPoints" type="Node3D" parent="."]
+[node name="LeakPoints" type="Node3D" parent="." unique_id=1419351801]
 
-[node name="LeakPointA" parent="LeakPoints" instance=ExtResource("19_leak")]
+[node name="LeakPointA" parent="LeakPoints" unique_id=1689585016 instance=ExtResource("19_leak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, 1, 34)
 
-[node name="LeakPointB" parent="LeakPoints" instance=ExtResource("19_leak")]
+[node name="LeakPointB" parent="LeakPoints" unique_id=1016041190 instance=ExtResource("19_leak")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 1.85, 1, 37.5)
 
-[node name="LeakPointC" parent="LeakPoints" instance=ExtResource("19_leak")]
+[node name="LeakPointC" parent="LeakPoints" unique_id=416696229 instance=ExtResource("19_leak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.85, 3.2, 36.5)
 
-[node name="LeakPointD" parent="LeakPoints" instance=ExtResource("19_leak")]
+[node name="LeakPointD" parent="LeakPoints" unique_id=890381275 instance=ExtResource("19_leak")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 1.85, 3.2, 33.5)
 
-[node name="CabinZones" type="Node3D" parent="."]
+[node name="CabinZones" type="Node3D" parent="." unique_id=1250930874]
 
-[node name="Cockpit" type="Node3D" parent="CabinZones"]
+[node name="Cockpit" type="Node3D" parent="CabinZones" unique_id=1775279963]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 4)
 script = ExtResource("20_zone")
 zone_name = "Cockpit"
 encounters_allowed = false
 
-[node name="CabinA" type="Node3D" parent="CabinZones"]
+[node name="CabinA" type="Node3D" parent="CabinZones" unique_id=1046295901]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 12)
 script = ExtResource("20_zone")
 zone_name = "Cabin A"
-encounters_allowed = true
 
-[node name="CabinB" type="Node3D" parent="CabinZones"]
+[node name="CabinB" type="Node3D" parent="CabinZones" unique_id=1309898686]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 20)
 script = ExtResource("20_zone")
 zone_name = "Cabin B"
-encounters_allowed = true
 
-[node name="MechanicalRoom" type="Node3D" parent="CabinZones"]
+[node name="MechanicalRoom" type="Node3D" parent="CabinZones" unique_id=1385394548]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 28)
 script = ExtResource("20_zone")
 zone_name = "Mechanical room"
 encounters_allowed = false
 
-[node name="GasChamber" type="Node3D" parent="CabinZones"]
+[node name="GasChamber" type="Node3D" parent="CabinZones" unique_id=873194639]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 36)
 script = ExtResource("20_zone")
 zone_name = "Gas chamber"
 encounters_allowed = false
 
-[node name="GhostSpawner" type="Node" parent="."]
+[node name="GhostSpawner" type="Node" parent="." unique_id=590639322]
 script = ExtResource("21_ghosts")
 figure_scene = ExtResource("22_figure")
+
+[node name="RepairPanels" type="Node3D" parent="." unique_id=455498430]
+
+[node name="ControlsPanel" parent="RepairPanels" unique_id=1030339837 instance=ExtResource("23_repair")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 0, 2.2)
+system_id = &"controls"
+title = "CONTROLS"
+
+[node name="FurnacePanel" parent="RepairPanels" unique_id=2038978501 instance=ExtResource("23_repair")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 1.7, 0, 27.7)
+
+[node name="BrakesPanel" parent="RepairPanels" unique_id=1634068418 instance=ExtResource("23_repair")]
+transform = Transform3D(0.0026330163, 0, 0.99999654, 0, 1, 0, -0.99999654, 0, 0.0026330163, -1.385236, 0, 31.43439)
+system_id = &"brakes"
+title = "BRAKES"
+
+[node name="PipesPanel" parent="RepairPanels" unique_id=1571627358 instance=ExtResource("23_repair")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 38.6)
+system_id = &"pipes"
+title = "GAS PIPES"

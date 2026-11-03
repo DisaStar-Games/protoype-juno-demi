@@ -18,12 +18,19 @@ signal furnace_temp_changed(temp: float)
 ## The furnace reached its maximum temperature (EventManager answers with a fire).
 signal furnace_overheated
 signal furnace_fire_changed(active: bool)
-## Dashboard warning light turned on/off. Ids: &"brakes", &"fire", &"gas", &"fuel", &"temp".
+## A system (see SYSTEMS) was damaged or repaired.
+signal system_damage_changed(id: StringName, damaged: bool)
+## Dashboard warning light turned on/off. Ids: &"brakes", &"fire", &"gas", &"fuel", &"temp", &"damage".
 signal warning_changed(id: StringName, active: bool)
 ## The horn button was pressed. Track events (Milestone 6) judge the timing from `distance`.
 signal horn_sounded
 ## The radio was used. Events can be resolved by calling the track regulator.
 signal radio_called
+
+## The train's systems. A collision or the bandits damage them; while ANY of them is
+## damaged the engine has no power (the throttle does nothing), until every one is repaired
+## at its repair panel (objects/system_repair_point.tscn) with the wrench.
+const SYSTEMS: Array[StringName] = [&"controls", &"furnace", &"brakes", &"pipes"]
 
 @export_group("Speed")
 @export var max_speed := 30.0
@@ -61,6 +68,10 @@ signal radio_called
 @export var temp_after_fire := 50.0
 ## Top speed multiplier while the furnace is on fire (1 = no effect).
 @export var fire_power_factor := 0.5
+
+@export_group("Damage")
+## How hard a collision brakes the train to a stop (u/s^2).
+@export var emergency_decel := 14.0
 
 @export_group("Hallucinations")
 ## Intensity lost per second once the gas leak is fixed.
@@ -174,11 +185,16 @@ var gas_leaking := false
 ## Set by GameState when the run ends: the train stops simulating (speed and fuel hold).
 var frozen := false
 
+## A collision happened: the train brakes hard to a stop (and every system is damaged).
+var emergency_stop := false
+
+var _damaged := {&"controls": false, &"furnace": false, &"brakes": false, &"pipes": false}
+
 # Warning lights: an id is lit when an event forces it (set_warning) or the level of
 # something derives it (low fuel, low brake fluid, hot furnace).
-var _forced := {&"brakes": false, &"fire": false, &"gas": false, &"fuel": false, &"temp": false}
-var _derived := {&"brakes": false, &"fire": false, &"gas": false, &"fuel": false, &"temp": false}
-var _warnings := {&"brakes": false, &"fire": false, &"gas": false, &"fuel": false, &"temp": false}
+var _forced := {&"brakes": false, &"fire": false, &"gas": false, &"fuel": false, &"temp": false, &"damage": false}
+var _derived := {&"brakes": false, &"fire": false, &"gas": false, &"fuel": false, &"temp": false, &"damage": false}
+var _warnings := {&"brakes": false, &"fire": false, &"gas": false, &"fuel": false, &"temp": false, &"damage": false}
 var _overheat_announced := false
 
 
@@ -194,9 +210,15 @@ func _physics_process(delta: float) -> void:
 func simulate(delta: float) -> void:
 	if frozen:
 		return
-	# Accelerate toward the throttle setting; no fuel means no power, so we coast down.
-	var target := throttle * effective_max_speed() if fuel > 0.0 else 0.0
-	if speed < target:
+	# Accelerate toward the throttle setting; no fuel or a damaged system means no power,
+	# so we coast down. A collision brakes hard to a stop first.
+	var powered := not any_system_damaged()
+	var target := throttle * effective_max_speed() if fuel > 0.0 and powered else 0.0
+	if emergency_stop:
+		speed = move_toward(speed, 0.0, emergency_decel * delta)
+		if speed == 0.0:
+			emergency_stop = false
+	elif speed < target:
 		speed = move_toward(speed, target, acceleration * delta)
 	elif speed > target:
 		speed = move_toward(speed, target, coast_decel * delta)
@@ -221,7 +243,7 @@ func simulate(delta: float) -> void:
 ## down otherwise. At the maximum it overheats, which the fire event answers.
 func _simulate_furnace(delta: float) -> void:
 	var heat := 0.0
-	if fuel > 0.0:
+	if fuel > 0.0 and not any_system_damaged():
 		if throttle >= 0.99:
 			heat += heat_rate_full_throttle
 		if boost_active:
@@ -270,6 +292,53 @@ func call_radio() -> void:
 	radio_called.emit()
 
 
+## Damages one system. While any system is damaged the engine has no power.
+func damage_system(id: StringName) -> void:
+	if _damaged.has(id) and not _damaged[id]:
+		_damaged[id] = true
+		system_damage_changed.emit(id, true)
+		_update_derived_warnings()
+
+
+func repair_system(id: StringName) -> void:
+	if _damaged.has(id) and _damaged[id]:
+		_damaged[id] = false
+		system_damage_changed.emit(id, false)
+		_update_derived_warnings()
+
+
+func damage_all_systems() -> void:
+	for id in SYSTEMS:
+		damage_system(id)
+
+
+func repair_all_systems() -> void:
+	for id in SYSTEMS:
+		repair_system(id)
+
+
+func is_system_damaged(id: StringName) -> bool:
+	return _damaged.get(id, false)
+
+
+func damaged_system_count() -> int:
+	var count := 0
+	for id in SYSTEMS:
+		if _damaged[id]:
+			count += 1
+	return count
+
+
+func any_system_damaged() -> bool:
+	return damaged_system_count() > 0
+
+
+## A crash: the train brakes hard to a stop and every system is wrecked.
+func collide() -> void:
+	emergency_stop = true
+	damage_all_systems()
+
+
 ## Forces a dashboard warning light on or off (events use this). The light also stays
 ## on while its level-based condition holds: FUEL below `low_fuel_threshold`, BRAKES
 ## below `low_brake_fluid_threshold`, TEMP from `high_temp_threshold`.
@@ -288,6 +357,7 @@ func _update_derived_warnings() -> void:
 	_derived[&"fuel"] = fuel < low_fuel_threshold
 	_derived[&"brakes"] = brake_fluid < low_brake_fluid_threshold
 	_derived[&"temp"] = furnace_temp >= high_temp_threshold
+	_derived[&"damage"] = any_system_damaged()
 	for id in _warnings:
 		_refresh_warning(id)
 
@@ -314,6 +384,8 @@ func reset() -> void:
 	current_track = &"A"
 	gas_leaking = false
 	hallucination_intensity = 0.0
+	emergency_stop = false
+	repair_all_systems() # emits, so the repair panels stop smoking
 	for id in _forced:
 		_forced[id] = false
 	_update_derived_warnings()

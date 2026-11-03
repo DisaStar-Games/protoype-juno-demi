@@ -9,6 +9,7 @@ extends DebugWindow
 var _sliders := {}   # property name -> {slider, label, dragging}
 var _toggles := {}   # property name -> CheckBox
 var _warning_toggles := {}   # warning id -> CheckBox
+var _system_toggles := {}   # system id -> CheckBox
 var _info: Label
 var _track_button: Button
 
@@ -38,6 +39,8 @@ func _process(_delta: float) -> void:
 		_toggles[prop].set_pressed_no_signal(TrainState.get(prop))
 	for id in _warning_toggles:
 		_warning_toggles[id].set_pressed_no_signal(TrainState.is_warning(id))
+	for id in _system_toggles:
+		_system_toggles[id].set_pressed_no_signal(TrainState.is_system_damaged(id))
 	_track_button.text = "Track switch: %s  (click to flip)" % TrainState.current_track
 	_info.text = "Speed %.1f u/s   Distance %.0f u\nFuel %.0f%%   Brake strength %.0f%%\nDelivery timer (placeholder) %s" % [
 		TrainState.speed,
@@ -69,6 +72,8 @@ func _build() -> void:
 	_add_toggle("Hallucinating", &"hallucinating")
 	_add_warning_toggle("Fire warning light", &"fire")
 	_add_warning_toggle("Gas warning light", &"gas")
+	for id in TrainState.SYSTEMS:
+		_add_system_toggle("%s damaged" % String(id).capitalize(), id)
 
 	_track_button = Button.new()
 	_track_button.pressed.connect(func() -> void:
@@ -140,3 +145,16 @@ func _add_warning_toggle(title: String, id: StringName) -> void:
 	box.toggled.connect(func(pressed: bool) -> void: TrainState.set_warning(id, pressed))
 	rows.add_child(box)
 	_warning_toggles[id] = box
+
+
+## Damaged systems stop the engine until each one is repaired at its panel.
+func _add_system_toggle(title: String, id: StringName) -> void:
+	var box := CheckBox.new()
+	box.text = title
+	box.toggled.connect(func(pressed: bool) -> void:
+		if pressed:
+			TrainState.damage_system(id)
+		else:
+			TrainState.repair_system(id))
+	rows.add_child(box)
+	_system_toggles[id] = box

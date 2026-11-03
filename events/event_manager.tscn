@@ -7,9 +7,14 @@
 [ext_resource type="PackedScene" path="res://events/brake_leak_event.tscn" id="5_brake"]
 [ext_resource type="PackedScene" path="res://events/gas_leak_event.tscn" id="6_gas"]
 [ext_resource type="PackedScene" path="res://events/trespasser_event.tscn" id="7_trespasser"]
+[ext_resource type="PackedScene" path="res://events/slow_train_event.tscn" id="8_slow"]
+[ext_resource type="PackedScene" path="res://events/bandits_event.tscn" id="9_bandits"]
+[ext_resource type="PackedScene" path="res://events/people_event.tscn" id="10_people"]
+[ext_resource type="PackedScene" path="res://events/track_split_event.tscn" id="11_split"]
+[ext_resource type="PackedScene" path="res://events/bandit_raid_event.tscn" id="12_raid"]
 
 [node name="EventManager" type="Node"]
 script = ExtResource("1_manager")
 route = ExtResource("2_route")
-debug_events = Array[PackedScene]([ExtResource("3_test"), ExtResource("4_fire"), ExtResource("5_brake"), ExtResource("6_gas"), ExtResource("7_trespasser")])
+debug_events = Array[PackedScene]([ExtResource("3_test"), ExtResource("4_fire"), ExtResource("5_brake"), ExtResource("6_gas"), ExtResource("7_trespasser"), ExtResource("8_slow"), ExtResource("9_bandits"), ExtResource("10_people"), ExtResource("11_split"), ExtResource("12_raid")])
 furnace_fire_event = ExtResource("4_fire")

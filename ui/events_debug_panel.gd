@@ -101,6 +101,20 @@ func _build() -> void:
 	ghost.text = "Spawn ghost here"
 	ghost.pressed.connect(_spawn_ghost)
 	tools.add_child(ghost)
+	var systems_row := HBoxContainer.new()
+	rows.add_child(systems_row)
+	var damage := Button.new()
+	damage.text = "Damage all systems"
+	damage.pressed.connect(TrainState.damage_all_systems)
+	systems_row.add_child(damage)
+	var repair := Button.new()
+	repair.text = "Repair all systems"
+	repair.pressed.connect(TrainState.repair_all_systems)
+	systems_row.add_child(repair)
+	var kill := Button.new()
+	kill.text = "Kill bandits"
+	kill.pressed.connect(_kill_bandits)
+	systems_row.add_child(kill)
 
 
 func _header(text: String) -> Label:
@@ -161,3 +175,9 @@ func _spawn_ghost() -> void:
 	var spawner := get_tree().get_first_node_in_group("ghost_spawner")
 	if spawner != null:
 		spawner.spawn_ghost()
+
+
+## Stands in for the future weapon: every bandit on the train dies.
+func _kill_bandits() -> void:
+	for bandit in get_tree().get_nodes_in_group("bandit"):
+		bandit.hit(9999.0)

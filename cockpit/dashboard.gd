@@ -16,6 +16,7 @@ func _ready() -> void:
 	TrainState.brake_fluid_changed.connect(_update_brake_fluid)
 	TrainState.distance_changed.connect(_update_route)
 	TrainState.furnace_temp_changed.connect(_update_temp)
+	EventManager.events_changed.connect(_on_events_changed)
 	GameState.time_left_changed.connect(_update_timer)
 
 	_update_speed(TrainState.speed)
@@ -41,7 +42,12 @@ func _update_brake_fluid(fluid: float) -> void:
 
 func _update_route(distance: float) -> void:
 	var progress: float = clampf(distance / GameState.route_length, 0.0, 1.0)
-	route_gauge.set_value(progress, "%d%%" % roundi(progress * 100.0))
+	var text := "%d%%" % roundi(progress * 100.0)
+	for event in EventManager.events:
+		if event.id == &"track_split" and event.is_live():
+			text = "SPLIT %d u" % maxi(0, roundi(event.remaining_distance())) # a junction is coming
+			break
+	route_gauge.set_value(progress, text)
 
 
 func _update_timer(seconds: float) -> void:
@@ -52,3 +58,7 @@ func _update_temp(temp: float) -> void:
 	var ratio: float = temp / TrainState.max_furnace_temp
 	temp_gauge.set_value(ratio, "%d" % roundi(temp))
 	temp_gauge.set_fill_color(Gauge.heat_color(ratio))
+
+
+func _on_events_changed() -> void:
+	_update_route(TrainState.distance)
