@@ -25,6 +25,20 @@ func get_hold_time(_player: Node) -> float:
 	return hold_time
 
 
+## True while the console is wrecked: its controls refuse input.
+func console_broken() -> bool:
+	return TrainState.is_system_damaged(&"controls")
+
+
+## Console controls call this first in interact(): if the console is broken it says so and
+## returns true.
+func refuse_if_broken() -> bool:
+	if console_broken():
+		GameState.post_message("The console is broken! Repair it first.")
+		return true
+	return false
+
+
 func interact(_player: Node) -> void:
 	pass
 

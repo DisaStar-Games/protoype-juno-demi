@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dofei7ovndqbc" path="res://events/route_data.gd" id="1_route"]
 [ext_resource type="Script" uid="uid://dtq2nt5qcqo0r" path="res://events/route_entry.gd" id="2_entry"]
-[ext_resource type="PackedScene" path="res://events/brake_leak_event.tscn" id="3_brake"]
+[ext_resource type="PackedScene" path="res://events/coolant_leak_event.tscn" id="3_brake"]
 [ext_resource type="PackedScene" path="res://events/gas_leak_event.tscn" id="4_gas"]
 [ext_resource type="PackedScene" path="res://events/people_event.tscn" id="5_people"]
 [ext_resource type="PackedScene" path="res://events/slow_train_event.tscn" id="6_slow"]

@@ -13,6 +13,8 @@ extends RigidBody3D
 @export var hold_time := 0.0
 ## HUD hint for items with their own LMB action, e.g. "spray water" (see use_held below).
 @export var use_hint := ""
+## Another HUD hint, e.g. "[R] reload".
+@export var extra_hint := ""
 
 ## Where each kind of item started in the level: item id -> {scene, transform}. Events use
 ## it to put a needed item back when it was used up or lost.

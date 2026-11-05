@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="RandomPool" format=3 uid="uid://cxws0mumqp76q"]
+
+[ext_resource type="Script" uid="uid://cgqptfpv61qcu" path="res://events/random_pool.gd" id="1_pool"]
+[ext_resource type="Script" uid="uid://chx55xxvg427d" path="res://events/random_entry.gd" id="2_entry"]
+[ext_resource type="PackedScene" path="res://events/coolant_leak_event.tscn" id="s_coolant"]
+[ext_resource type="PackedScene" path="res://events/furnace_fire_event.tscn" id="s_fire"]
+[ext_resource type="PackedScene" path="res://events/gas_leak_event.tscn" id="s_gas"]
+
+[sub_resource type="Resource" id="Resource_coolant"]
+script = ExtResource("2_entry")
+event_scene = ExtResource("s_coolant")
+chance = 0.08
+cooldown = 60.0
+
+[sub_resource type="Resource" id="Resource_gas"]
+script = ExtResource("2_entry")
+event_scene = ExtResource("s_gas")
+chance = 0.06
+cooldown = 90.0
+
+[sub_resource type="Resource" id="Resource_fire"]
+script = ExtResource("2_entry")
+event_scene = ExtResource("s_fire")
+chance = 0.06
+cooldown = 70.0
+
+[resource]
+script = ExtResource("1_pool")
+entries = Array[ExtResource("2_entry")]([SubResource("Resource_coolant"), SubResource("Resource_gas"), SubResource("Resource_fire")])
+fault_multiplier_at_end = 2.0
+track_multiplier_at_end = 1.0
+check_interval = 12.0

@@ -1,7 +1,8 @@
-extends StaticBody3D
+extends Interactable
 
 ## Blockout furnace: coal adds to TrainState.fuel and the top bar shows the fuel level.
-## The lower bar shows its temperature (rises with full throttle and boost); at the top it
+## Press E to shovel in a coal from your pockets (or throw coal through the intake).
+## The lower bar shows its temperature (rises with boost and low coolant); at the top it
 ## catches fire, see events/furnace_fire_event.gd.
 
 @onready var bar_pivot: Node3D = $ProgressBar/BarPivot
@@ -23,6 +24,19 @@ func _ready() -> void:
 	temp_fill.material_override = _temp_material
 	TrainState.furnace_temp_changed.connect(_on_temp_changed)
 	_on_temp_changed(TrainState.furnace_temp)
+
+
+func get_prompt(_player: Node) -> String:
+	if Inventory.count(&"coal") <= 0:
+		return "No coal in your pockets"
+	return "Feed the furnace (%d coal)" % Inventory.count(&"coal")
+
+
+func interact(_player: Node) -> void:
+	if Inventory.remove(&"coal", 1):
+		add_coal()
+	else:
+		GameState.post_message("You have no coal. Take some from the pile.")
 
 
 func _on_intake_body_entered(body: Node) -> void:

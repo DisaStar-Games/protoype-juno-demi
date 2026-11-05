@@ -3,7 +3,7 @@ extends TrainEvent
 ## Someone is aboard. The event arms, and when the player walks into the cabin it picked,
 ## a stalker (Figure in TRESPASSER mode) appears at the far end of it. It freezes while
 ## watched and creeps when not; staring it down resolves the event, being reached by it
-## fails the event (jump scare + time penalty). Walking out of its cabin leaves it behind.
+## fails the event (jump scare + time penalty) and a random system of the train goes down. Walking out of its cabin leaves it behind.
 ## Not scheduled randomly: start it from the F2 panel (or a route entry).
 ## If the player is already in a cabin when it starts, the stalker appears right away.
 
@@ -102,6 +102,9 @@ func _on_figure_vanished(reason: StringName) -> void:
 
 
 func _on_figure_caught() -> void:
+	var kind: StringName = EventManager.sabotage_random()
+	if kind != &"":
+		GameState.post_message("The trespasser wrecked the %s!" % EventManager.SYSTEM_NAMES[kind])
 	fail()
 
 
@@ -113,3 +116,7 @@ func _remove_figure() -> void:
 
 func _player() -> Node3D:
 	return get_tree().get_first_node_in_group("player") as Node3D
+
+
+func task_text() -> String:
+	return "Someone is aboard: stare it down in the cabins" if is_instance_valid(_figure) else "Someone is aboard: watch the cabins"

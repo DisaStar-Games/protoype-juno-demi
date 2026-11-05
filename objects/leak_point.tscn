@@ -30,8 +30,6 @@ size = Vector3(0.18, 0.18, 0.18)
 
 [node name="LeakPoint" type="StaticBody3D"]
 script = ExtResource("1_leak")
-required_item_id = &"wrench"
-required_item_name = "wrench"
 repair_time = 3.0
 action_text = "Tighten the leaking joint"
 

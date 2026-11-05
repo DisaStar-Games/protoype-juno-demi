@@ -11,6 +11,7 @@ var _inside_rows: VBoxContainer
 var _outside_rows: VBoxContainer
 var _live_rows: VBoxContainer
 var _summary: Label
+var _chances: Label
 var _live_labels := {} # TrainEvent -> its Label
 
 
@@ -34,6 +35,7 @@ func _process(_delta: float) -> void:
 		if is_instance_valid(event):
 			_live_labels[event].text = _event_line(event)
 	_summary.text = "%d more scheduled on the route" % _pending_count()
+	_chances.text = chances_text()
 
 
 ## The live list as text: one line per event that is not just waiting, then the number
@@ -44,6 +46,24 @@ func live_text() -> String:
 		if event.state != TrainEvent.State.PENDING:
 			lines.append(_event_line(event))
 	lines.append("%d more scheduled on the route" % _pending_count())
+	return "\n".join(lines)
+
+
+## The random event chances as text: per roll, with the progress scaling, plus the rough
+## number of times it starts per minute.
+func chances_text() -> String:
+	var pool := EventManager.random_pool
+	if pool == null:
+		return "No random pool"
+	var progress := clampf(TrainState.distance / GameState.route_length, 0.0, 1.0)
+	var lines: Array[String] = ["A roll every %d s (min %d s apart), route %d%%  ->  faults x%.1f, track x%.1f" % [
+		roundi(pool.check_interval), roundi(pool.min_gap), roundi(progress * 100.0),
+		lerpf(1.0, pool.fault_multiplier_at_end, progress), lerpf(1.0, pool.track_multiplier_at_end, progress)]]
+	for row in EventManager.chance_table():
+		var where := "train" if row.category == TrainEvent.Category.INSIDE else "track"
+		var per_minute: float = row.chance * 60.0 / pool.check_interval
+		lines.append("%-15s %-5s %4.1f%% per roll  (base %.1f%%)  ~%.2f/min  %s" % [
+			row.name, where, row.chance * 100.0, row.base * 100.0, per_minute, row.note])
 	return "\n".join(lines)
 
 
@@ -81,6 +101,11 @@ func _build() -> void:
 		line.add_child(now)
 
 	rows.add_child(HSeparator.new())
+	rows.add_child(_header("RANDOM EVENT CHANCES  (right now)"))
+	_chances = Label.new()
+	rows.add_child(_chances)
+
+	rows.add_child(HSeparator.new())
 	rows.add_child(_header("LIVE EVENTS"))
 	_live_rows = _section()
 	_summary = Label.new()
@@ -103,18 +128,35 @@ func _build() -> void:
 	tools.add_child(ghost)
 	var systems_row := HBoxContainer.new()
 	rows.add_child(systems_row)
-	var damage := Button.new()
-	damage.text = "Damage all systems"
-	damage.pressed.connect(TrainState.damage_all_systems)
-	systems_row.add_child(damage)
+	var wreck := Button.new()
+	wreck.text = "Wreck the train (crash)"
+	wreck.pressed.connect(EventManager.wreck_train)
+	systems_row.add_child(wreck)
 	var repair := Button.new()
-	repair.text = "Repair all systems"
-	repair.pressed.connect(TrainState.repair_all_systems)
+	repair.text = "Repair console"
+	repair.pressed.connect(func() -> void: TrainState.repair_system(&"controls"))
 	systems_row.add_child(repair)
 	var kill := Button.new()
 	kill.text = "Kill bandits"
 	kill.pressed.connect(_kill_bandits)
 	systems_row.add_child(kill)
+
+	var random_row := HBoxContainer.new()
+	rows.add_child(random_row)
+	var random_toggle := CheckBox.new()
+	random_toggle.text = "Random events"
+	random_toggle.button_pressed = EventManager.random_enabled
+	random_toggle.toggled.connect(func(on: bool) -> void: EventManager.random_enabled = on)
+	random_row.add_child(random_toggle)
+	var idle_toggle := CheckBox.new()
+	idle_toggle.text = "Idle bandits"
+	idle_toggle.button_pressed = EventManager.idle_raid_enabled
+	idle_toggle.toggled.connect(func(on: bool) -> void: EventManager.idle_raid_enabled = on)
+	random_row.add_child(idle_toggle)
+	var roll := Button.new()
+	roll.text = "Roll one now"
+	roll.pressed.connect(func() -> void: EventManager.roll_random_event(true))
+	random_row.add_child(roll)
 
 
 func _header(text: String) -> Label:

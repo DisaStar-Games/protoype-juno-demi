@@ -6,6 +6,8 @@ extends Node3D
 
 signal changed(item: ItemPickup)
 
+const COAL_SCENE := preload("res://items/coal.tscn")
+
 @export var throw_force := 8.0
 @export var throw_up := 3.0
 @export var drop_speed := 1.5
@@ -27,7 +29,17 @@ func _input(event: InputEvent) -> void:
 	if require_captured_mouse and Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
 		return
 	if event.is_action_pressed("use_item"):
-		throw()
+		if item != null and item.has_method("use_pressed"):
+			# A click does something of its own (the shotgun fires): aim along the view.
+			var camera := get_parent() as Node3D
+			item.use_pressed(camera.global_position, -camera.global_transform.basis.z)
+		elif item == null:
+			_throw_from_pockets()
+		else:
+			throw()
+	elif event.is_action_pressed("reload"):
+		if item != null and item.has_method("reload_pressed"):
+			item.reload_pressed()
 	elif event.is_action_pressed("drop_item"):
 		drop()
 
@@ -62,6 +74,16 @@ func pick_up(new_item: ItemPickup) -> void:
 	item.set_held(true)
 	item.global_transform = global_transform
 	changed.emit(item)
+
+
+## Empty hands + coal in the pockets: a left click throws a lump of coal.
+func _throw_from_pockets() -> void:
+	if not Inventory.remove(&"coal", 1):
+		return
+	var coal := COAL_SCENE.instantiate() as ItemPickup
+	get_tree().current_scene.add_child(coal)
+	coal.global_transform = global_transform
+	coal.apply_central_impulse(-global_transform.basis.z * throw_force + Vector3.UP * throw_up)
 
 
 func drop() -> void:

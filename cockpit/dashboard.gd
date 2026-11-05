@@ -4,7 +4,7 @@ extends Node3D
 
 @onready var speed_gauge: Gauge = %SpeedGauge
 @onready var fuel_gauge: Gauge = %FuelGauge
-@onready var brake_fluid_gauge: Gauge = %BrakeFluidGauge
+@onready var coolant_gauge: Gauge = %CoolantGauge
 @onready var timer_gauge: Gauge = %TimerGauge
 @onready var route_gauge: Gauge = %RouteGauge
 @onready var temp_gauge: Gauge = %TempGauge
@@ -13,7 +13,7 @@ extends Node3D
 func _ready() -> void:
 	TrainState.speed_changed.connect(_update_speed)
 	TrainState.fuel_changed.connect(_update_fuel)
-	TrainState.brake_fluid_changed.connect(_update_brake_fluid)
+	TrainState.coolant_changed.connect(_update_coolant)
 	TrainState.distance_changed.connect(_update_route)
 	TrainState.furnace_temp_changed.connect(_update_temp)
 	EventManager.events_changed.connect(_on_events_changed)
@@ -21,7 +21,7 @@ func _ready() -> void:
 
 	_update_speed(TrainState.speed)
 	_update_fuel(TrainState.fuel)
-	_update_brake_fluid(TrainState.brake_fluid)
+	_update_coolant(TrainState.coolant)
 	_update_route(TrainState.distance)
 	_update_temp(TrainState.furnace_temp)
 	_update_timer(GameState.time_left)
@@ -36,8 +36,8 @@ func _update_fuel(fuel: float) -> void:
 	fuel_gauge.set_value(fuel / TrainState.max_fuel, "%d%%" % roundi(100.0 * fuel / TrainState.max_fuel))
 
 
-func _update_brake_fluid(fluid: float) -> void:
-	brake_fluid_gauge.set_value(fluid / TrainState.max_brake_fluid, "%d%%" % roundi(100.0 * fluid / TrainState.max_brake_fluid))
+func _update_coolant(fluid: float) -> void:
+	coolant_gauge.set_value(fluid / TrainState.max_coolant, "%d%%" % roundi(100.0 * fluid / TrainState.max_coolant))
 
 
 func _update_route(distance: float) -> void:

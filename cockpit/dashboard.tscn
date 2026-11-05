@@ -33,10 +33,10 @@ title = "FUEL"
 fill_color = Color(1, 0.6, 0.15, 1)
 show_bar = true
 
-[node name="BrakeFluidGauge" parent="." instance=ExtResource("2_gauge")]
+[node name="CoolantGauge" parent="." instance=ExtResource("2_gauge")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0.37, 0)
-title = "BRAKE FLUID"
+title = "COOLANT"
 fill_color = Color(0.4, 0.55, 1, 1)
 show_bar = true
 
@@ -61,10 +61,10 @@ title = "ROUTE"
 fill_color = Color(0.5, 1, 0.5, 1)
 show_bar = true
 
-[node name="BrakesLight" parent="." instance=ExtResource("3_light")]
+[node name="CoolantLight" parent="." instance=ExtResource("3_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.875, -0.36, 0)
-warning_id = &"brakes"
-title = "BRAKES"
+warning_id = &"coolant"
+title = "COOLANT"
 color = Color(1, 0.2, 0.2, 1)
 
 [node name="FireLight" parent="." instance=ExtResource("3_light")]
@@ -94,5 +94,5 @@ color = Color(1, 0.35, 0.15, 1)
 [node name="DamageLight" parent="." instance=ExtResource("3_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.875, -0.36, 0)
 warning_id = &"damage"
-title = "DAMAGE"
+title = "CONSOLE"
 color = Color(0.95, 0.25, 0.85, 1)

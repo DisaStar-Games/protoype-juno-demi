@@ -1,9 +1,9 @@
 class_name SystemRepairPoint
 extends RepairPoint
 
-## The repair panel of one train system (controls, furnace, brakes, pipes). While that
-## system is damaged (a collision, bandits) it smokes and its lamp is red; hold E on it
-## with the wrench to repair it. The engine has no power until every system is repaired.
+## The repair panel of a train system. Only the console is left (the furnace, coolant tank and pipes
+## break through their own events). While the console is damaged (a collision, bandits) the
+## panel smokes and its lamp is red; hold E on it to repair it.
 
 @export var system_id: StringName = &"furnace"
 @export var title := "FURNACE"
@@ -19,8 +19,6 @@ func _ready() -> void:
 	add_to_group("system_repair_points")
 	label.text = title
 	action_text = "Repair the %s" % title.to_lower()
-	required_item_id = &"wrench"
-	required_item_name = "wrench"
 	_lamp_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	_lamp_material.emission_enabled = true
 	lamp.material_override = _lamp_material
@@ -50,6 +48,6 @@ func _on_repaired() -> void:
 	TrainState.repair_system(system_id)
 	var left: int = TrainState.damaged_system_count()
 	if left == 0:
-		GameState.post_message("%s repaired. All systems are back, the train can move again!" % title.capitalize())
+		GameState.post_message("%s repaired. The controls work again!" % title.capitalize())
 	else:
 		GameState.post_message("%s repaired. %d system%s still damaged." % [title.capitalize(), left, "" if left == 1 else "s"])

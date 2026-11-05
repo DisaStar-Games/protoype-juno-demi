@@ -10,6 +10,8 @@ signal time_left_changed(seconds: float)
 ## One-line status message for the HUD ("Track switch set to B"). Milestone 10 turns this into a log.
 signal message_posted(text: String)
 signal state_changed(state: State)
+## The train passed a checkpoint of the route (index into `checkpoint_ratios`).
+signal checkpoint_reached(index: int, checkpoint_name: String)
 ## Seconds were taken off the timer (a failed event). The HUD flashes red on it.
 signal penalty_applied(seconds: float, reason: String)
 ## The run ended. `won` is true on arrival; `reason` is a short line for the end screen.
@@ -19,7 +21,13 @@ signal game_over(won: bool, reason: String)
 ## Distance (TrainState units) that counts as arrived; the dashboard shows progress to it.
 @export var route_length := 6000.0
 
+## Where the checkpoints are, as a fraction of the route, and their names (shown on the map).
+## Every checkpoint brings bandits for now (EventManager).
+var checkpoint_ratios: Array[float] = [0.28, 0.6, 0.85]
+var checkpoint_names: Array[String] = ["MARSH", "HOLLOW", "DEPOT"]
+
 var state := State.RUNNING
+var next_checkpoint := 0
 var time_left := delivery_time
 
 
@@ -40,6 +48,10 @@ func tick(delta: float) -> void:
 	if TrainState.distance >= route_length:
 		end_run(true, "Delivered on time")
 		return
+
+	while next_checkpoint < checkpoint_ratios.size() and TrainState.distance >= route_length * checkpoint_ratios[next_checkpoint]:
+		checkpoint_reached.emit(next_checkpoint, checkpoint_names[next_checkpoint])
+		next_checkpoint += 1
 
 	var before := ceili(time_left)
 	time_left = maxf(time_left - delta, 0.0)
@@ -76,8 +88,10 @@ func apply_time_penalty(seconds: float, reason: String) -> void:
 ## Back to a running run, same scene (the debug panel uses this).
 func reset() -> void:
 	state = State.RUNNING
+	next_checkpoint = 0
 	time_left = delivery_time
 	TrainState.frozen = false
+	Inventory.reset()
 	time_left_changed.emit(time_left)
 	state_changed.emit(state)
 

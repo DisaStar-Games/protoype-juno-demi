@@ -2,14 +2,17 @@ extends TrainEvent
 
 ## A pipe in the gas chamber starts leaking. It begins silently: the player slowly
 ## hallucinates (screen wobble and tint, and fake hazards in the cockpit window) and the
-## GAS light comes on once it is bad. Fix it with the wrench from the cockpit shelf: find the
+## GAS light is on from the start. Fix it with the wrench from the cockpit shelf: find the
 ## hissing joint in the gas chamber and hold E on it. If the hallucinations stay at full
-## strength for `fail_hold_time` seconds, the event fails.
+## strength for `fail_hold_time` seconds, the event fails. The leak also slows the train down
+## until it stops after `stop_time` seconds (TrainState.gas_spread).
 
 ## Hallucination intensity gained per second (the plan's 2 %/s = 50 s to the maximum).
 @export var intensity_rate := 0.02
-## The GAS light comes on at this intensity.
+## The warning message about the gas comes at this intensity (the GAS light is on from the start).
 @export_range(0.0, 1.0) var gas_light_intensity := 0.4
+## Seconds until the leak has stopped the train.
+@export var stop_time := 20.0
 ## Seconds at full intensity before the event fails.
 @export var fail_hold_time := 10.0
 @export_group("Hallucinated hazards")
@@ -23,6 +26,7 @@ extends TrainEvent
 
 var _point: RepairPoint
 var _full_time := 0.0
+var _elapsed := 0.0
 var _next_fake := 0.0
 var _gas_light_announced := false
 var _rng := RandomNumberGenerator.new()
@@ -46,6 +50,7 @@ func failed_message() -> String:
 
 func on_start() -> void:
 	TrainState.gas_leaking = true
+	TrainState.set_warning(&"gas", true) # the light is on from the first moment of the effect
 	ItemPickup.ensure_available(get_tree(), &"wrench")
 	var points := get_tree().get_nodes_in_group("gas_leak_points")
 	if points.is_empty():
@@ -63,12 +68,13 @@ func on_start() -> void:
 func process_event(delta: float) -> void:
 	if state != State.ACTIVE:
 		return
+	_elapsed += delta
+	TrainState.gas_spread = clampf(_elapsed / stop_time, 0.0, 1.0)
 	TrainState.hallucination_intensity += intensity_rate * delta
 	var intensity: float = TrainState.hallucination_intensity
 
 	if intensity >= gas_light_intensity and not _gas_light_announced:
 		_gas_light_announced = true
-		TrainState.set_warning(&"gas", true)
 		GameState.post_message("Warning: gas detected! Find the leak, you'll need a wrench.")
 
 	if intensity >= 1.0:
@@ -93,6 +99,10 @@ func on_fail() -> void:
 	_stop_leaking()
 
 
+func on_cancel() -> void:
+	_stop_leaking()
+
+
 func _spawn_fake_hazard() -> void:
 	var live_fakes := 0
 	for event in EventManager.events:
@@ -104,7 +114,12 @@ func _spawn_fake_hazard() -> void:
 
 func _stop_leaking() -> void:
 	TrainState.gas_leaking = false # the hallucinations now fade out by themselves
+	TrainState.gas_spread = 0.0
 	TrainState.set_warning(&"gas", false)
-	if _point != null:
+	if is_instance_valid(_point):
 		_point.needs_repair = false
 		_point.set_leaking(false)
+
+
+func task_text() -> String:
+	return "Fix the gas leak: find the hissing pipe (hold E)"

@@ -30,7 +30,13 @@ func _ready() -> void:
 	cap.material_override = cap_material
 
 
+func get_prompt(_player: Node) -> String:
+	return "The console is broken!" if console_broken() else prompt_text
+
+
 func interact(player: Node) -> void:
+	if refuse_if_broken():
+		return
 	_animate_press()
 	pressed.emit()
 	_on_pressed(player)

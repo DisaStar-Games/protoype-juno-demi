@@ -11,6 +11,8 @@ func _ready() -> void:
 
 
 func get_prompt(_player: Node) -> String:
+	if console_broken():
+		return "The console is broken!"
 	return "Boost: %s  (press to turn %s)" % [
 		"ON" if TrainState.boost_active else "OFF",
 		"off" if TrainState.boost_active else "on",

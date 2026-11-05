@@ -1,0 +1,1083 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://stations/station.gd" id="1_station"]
+[ext_resource type="Script" path="res://stations/board_trigger.gd" id="2_board"]
+[ext_resource type="PackedScene" uid="uid://jyncanbkjjnq" path="res://player/player.tscn" id="3_player"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky"]
+sky_top_color = Color(0.3, 0.42, 0.65, 1)
+sky_horizon_color = Color(0.7, 0.78, 0.9, 1)
+ground_horizon_color = Color(0.7, 0.78, 0.9, 1)
+ground_bottom_color = Color(0.85, 0.89, 0.94, 1)
+
+[sub_resource type="Sky" id="SkyRes"]
+sky_material = SubResource("Sky")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("SkyRes")
+ambient_light_source = 3
+ambient_light_color = Color(0.7, 0.78, 0.9, 1)
+ambient_light_energy = 0.7
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.75, 0.82, 0.92, 1)
+fog_density = 0.006
+
+[sub_resource type="StandardMaterial3D" id="M0"]
+albedo_color = Color(0.85, 0.89, 0.94, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M1"]
+albedo_color = Color(0.55, 0.6, 0.68, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M2"]
+albedo_color = Color(0.85, 0.75, 0.2, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M3"]
+albedo_color = Color(0.2, 0.19, 0.19, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M4"]
+albedo_color = Color(0.5, 0.5, 0.55, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M5"]
+albedo_color = Color(0.25, 0.17, 0.1, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M6"]
+albedo_color = Color(0.2, 0.26, 0.34, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M7"]
+albedo_color = Color(0.25, 0.5, 0.75, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M8"]
+albedo_color = Color(0.12, 0.13, 0.16, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M9"]
+albedo_color = Color(0.9, 0.8, 0.5, 1)
+roughness = 0.9
+emission_enabled = true
+emission = Color(0.9, 0.7, 0.3, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="StandardMaterial3D" id="M10"]
+albedo_color = Color(0.1, 0.1, 0.12, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M11"]
+albedo_color = Color(0.3, 0.3, 0.32, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M12"]
+albedo_color = Color(0.08, 0.08, 0.09, 1)
+roughness = 0.9
+
+[sub_resource type="BoxShape3D" id="DoorShape"]
+size = Vector3(1.8, 2.6, 1.2)
+
+[sub_resource type="StandardMaterial3D" id="M13"]
+albedo_color = Color(0.2, 0.2, 0.22, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M14"]
+albedo_color = Color(0.4, 0.3, 0.25, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M15"]
+albedo_color = Color(0.85, 0.88, 0.92, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M16"]
+albedo_color = Color(0.12, 0.12, 0.14, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M17"]
+albedo_color = Color(1, 0.85, 0.5, 1)
+roughness = 0.9
+emission_enabled = true
+emission = Color(1.0, 0.75, 0.35, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="StandardMaterial3D" id="M18"]
+albedo_color = Color(0.6, 0.65, 0.72, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M19"]
+albedo_color = Color(0.3, 0.2, 0.12, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M20"]
+albedo_color = Color(0.1, 0.28, 0.2, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M21"]
+albedo_color = Color(0.12, 0.32, 0.22, 1)
+roughness = 0.9
+
+[node name="StationFrostpine" type="Node3D"]
+script = ExtResource("1_station")
+station_id = &"frostpine"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.8, 0.35, -0.5, 0, 0.82, 0.57, 0.6, -0.47, 0.66, 0, 12, 0)
+light_color = Color(0.85, 0.9, 1, 1)
+light_energy = 0.9
+shadow_enabled = true
+directional_shadow_max_distance = 90.0
+
+[node name="Terrain" type="Node3D" parent="."]
+
+
+[node name="Ground" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(160, 1, 160)
+material = SubResource("M0")
+
+[node name="Platform" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.02, 5.5)
+size = Vector3(34, 0.04, 6)
+material = SubResource("M1")
+
+[node name="PlatformEdge" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.03, 2.55)
+use_collision = true
+size = Vector3(34, 0.04, 0.2)
+material = SubResource("M2")
+
+[node name="Track" type="Node3D" parent="."]
+
+
+[node name="Ballast" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.04, 0)
+size = Vector3(60, 0.08, 3.2)
+material = SubResource("M3")
+
+[node name="Rail1" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.14, -0.72)
+size = Vector3(60, 0.1, 0.1)
+material = SubResource("M4")
+
+[node name="Rail2" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.14, 0.72)
+size = Vector3(60, 0.1, 0.1)
+material = SubResource("M4")
+
+[node name="Tie1" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -28, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie2" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -26, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie3" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -24, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie4" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -22, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie5" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -20, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie6" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -18, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie7" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -16, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie8" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -14, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie9" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie10" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie11" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie12" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie13" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -4, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie14" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -2, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie15" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie16" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 2, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie17" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 4, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie18" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie19" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie20" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie21" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie22" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie23" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie24" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 18, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie25" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 20, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie26" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 22, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie27" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 24, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie28" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 26, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="Tie29" type="CSGBox3D" parent="Track"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 28, 0.1, 0)
+size = Vector3(0.3, 0.06, 2.6)
+material = SubResource("M5")
+
+[node name="ParkedTrain" type="Node3D" parent="."]
+
+
+[node name="Body" type="CSGBox3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 2, 0)
+use_collision = true
+size = Vector3(18, 3.2, 3)
+material = SubResource("M6")
+
+[node name="Stripe" type="CSGBox3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 1.1, 0)
+size = Vector3(18.04, 0.3, 3.04)
+material = SubResource("M7")
+
+[node name="Roof" type="CSGBox3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 3.75, 0)
+use_collision = true
+size = Vector3(18.4, 0.2, 3.3)
+material = SubResource("M8")
+
+[node name="Window1" type="CSGBox3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.5, 2.5, 1.53)
+size = Vector3(1.6, 0.9, 0.06)
+material = SubResource("M9")
+
+[node name="Window2" type="CSGBox3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -3.5, 2.5, 1.53)
+size = Vector3(1.6, 0.9, 0.06)
+material = SubResource("M9")
+
+[node name="Window3" type="CSGBox3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.5, 2.5, 1.53)
+size = Vector3(1.6, 0.9, 0.06)
+material = SubResource("M9")
+
+[node name="Window4" type="CSGBox3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.5, 2.5, 1.53)
+size = Vector3(1.6, 0.9, 0.06)
+material = SubResource("M9")
+
+[node name="DoorPanel" type="CSGBox3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 1.7, 1.52)
+size = Vector3(1.5, 2.3, 0.06)
+material = SubResource("M10")
+
+[node name="Step" type="CSGBox3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.2, 2)
+use_collision = true
+size = Vector3(1.8, 0.4, 0.9)
+material = SubResource("M11")
+
+[node name="Wheel1" type="CSGCylinder3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -6, 0.35, 0)
+radius = 0.35
+height = 2.7
+sides = 8
+material = SubResource("M12")
+
+[node name="Wheel2" type="CSGCylinder3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -2, 0.35, 0)
+radius = 0.35
+height = 2.7
+sides = 8
+material = SubResource("M12")
+
+[node name="Wheel3" type="CSGCylinder3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 2, 0.35, 0)
+radius = 0.35
+height = 2.7
+sides = 8
+material = SubResource("M12")
+
+[node name="Wheel4" type="CSGCylinder3D" parent="ParkedTrain"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 6, 0.35, 0)
+radius = 0.35
+height = 2.7
+sides = 8
+material = SubResource("M12")
+
+[node name="BoardTrigger" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 1.5, 1.6)
+script = ExtResource("2_board")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoardTrigger"]
+shape = SubResource("DoorShape")
+
+[node name="Label3D" type="Label3D" parent="BoardTrigger"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.2)
+billboard = 1
+no_depth_test = true
+pixel_size = 0.006
+font_size = 48
+outline_size = 12
+text = "TRAIN"
+
+[node name="Sign" type="Node3D" parent="."]
+
+
+[node name="Post1" type="CSGBox3D" parent="Sign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.4, 1.2, 3.6)
+use_collision = true
+size = Vector3(0.2, 2.4, 0.2)
+material = SubResource("M13")
+
+[node name="Post2" type="CSGBox3D" parent="Sign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -7.6, 1.2, 3.6)
+use_collision = true
+size = Vector3(0.2, 2.4, 0.2)
+material = SubResource("M13")
+
+[node name="Board" type="CSGBox3D" parent="Sign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 2.3, 3.6)
+size = Vector3(5.2, 1, 0.15)
+material = SubResource("M7")
+
+[node name="Name" type="Label3D" parent="Sign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.3, 3.7)
+pixel_size = 0.012
+font_size = 72
+outline_size = 10
+modulate = Color(0.05, 0.05, 0.05, 1)
+outline_modulate = Color(1, 1, 1, 0)
+text = "FROSTPINE"
+
+[node name="Buildings" type="Node3D" parent="."]
+
+
+[node name="Shed" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -15, 1.6, 12)
+use_collision = true
+size = Vector3(7, 3.2, 5)
+material = SubResource("M14")
+
+[node name="ShedRoof" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -15, 3.4, 12)
+use_collision = true
+size = Vector3(7.6, 0.3, 5.6)
+material = SubResource("M15")
+
+[node name="ShedDoor" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -15, 1.1, 9.45)
+size = Vector3(1.4, 2.2, 0.12)
+material = SubResource("M10")
+
+[node name="Warehouse" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16, 2.2, 14)
+use_collision = true
+size = Vector3(10, 4.4, 6)
+material = SubResource("M14")
+
+[node name="WarehouseRoof" type="CSGBox3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16, 4.6, 14)
+use_collision = true
+size = Vector3(10.6, 0.3, 6.6)
+material = SubResource("M15")
+
+[node name="WaterTank" type="CSGCylinder3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 24, 3, 4)
+use_collision = true
+radius = 1.8
+height = 6
+sides = 8
+material = SubResource("M14")
+
+[node name="TankLid" type="CSGCylinder3D" parent="Buildings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 24, 6.2, 4)
+use_collision = true
+radius = 1.9
+height = 0.4
+sides = 8
+cone = true
+material = SubResource("M15")
+
+[node name="Lamps" type="Node3D" parent="."]
+
+
+[node name="Pole1" type="CSGCylinder3D" parent="Lamps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12, 2, 7.8)
+use_collision = true
+radius = 0.1
+height = 4
+sides = 8
+material = SubResource("M16")
+
+[node name="Lamp1" type="CSGBox3D" parent="Lamps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12, 4.1, 7.8)
+size = Vector3(0.5, 0.2, 0.5)
+material = SubResource("M17")
+
+[node name="Light1" type="OmniLight3D" parent="Lamps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12, 3.8, 7.8)
+light_color = Color(1, 0.75, 0.45, 1)
+light_energy = 2.0
+omni_range = 14.0
+
+[node name="Pole2" type="CSGCylinder3D" parent="Lamps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12, 2, 7.8)
+use_collision = true
+radius = 0.1
+height = 4
+sides = 8
+material = SubResource("M16")
+
+[node name="Lamp2" type="CSGBox3D" parent="Lamps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12, 4.1, 7.8)
+size = Vector3(0.5, 0.2, 0.5)
+material = SubResource("M17")
+
+[node name="Light2" type="OmniLight3D" parent="Lamps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12, 3.8, 7.8)
+light_color = Color(1, 0.75, 0.45, 1)
+light_energy = 2.0
+omni_range = 14.0
+
+[node name="Supplies" type="Node3D" parent="."]
+
+
+[node name="Spawn1" type="Marker3D" parent="Supplies"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6, 0.04, 7.4)
+
+[node name="Spawn2" type="Marker3D" parent="Supplies"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.04, 7.4)
+
+[node name="Spawn3" type="Marker3D" parent="Supplies"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6, 0.04, 7.4)
+
+[node name="Rocks" type="Node3D" parent="."]
+
+
+[node name="Rock0" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.310889, 0, 0.950446, 0, 0.730709, 0, -0.939664, 0, 0.307362, -58.7038, 0.575279, -37.9353)
+use_collision = true
+radius = 1.64366
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Rock1" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.277, 0, 0.96087, 0, 0.626369, 0, -1.04374, 0, 0.300889, 26.5694, 1.23308, 22.5987)
+use_collision = true
+radius = 3.52308
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Rock2" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.401881, 0, 0.915692, 0, 0.583168, 0, -1.07533, 0, 0.471944, -16.5697, 0.656249, -37.1403)
+use_collision = true
+radius = 1.875
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Rock3" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.809832, 0, 0.586662, 0, 0.669781, 0, -0.506825, 0, 0.699625, -49.0819, 0.493659, 4.43899)
+use_collision = true
+radius = 1.41045
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Rock4" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.467334, 0, 0.884081, 0, 0.772424, 0, -0.887074, 0, 0.468916, -26.2309, 1.12671, -16.8673)
+use_collision = true
+radius = 3.21917
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Rock6" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.0295624, 0, 0.999563, 0, 0.500681, 0, -0.909167, 0, 0.0268889, -21.4325, 0.901323, -12.8862)
+use_collision = true
+radius = 2.57521
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Rock7" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.77716, 0, 0.629303, 0, 0.719207, 0, -0.601104, 0, 0.742336, -42.7343, 1.04743, 24.2696)
+use_collision = true
+radius = 2.99267
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Rock8" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.99809, 0, 0.0617712, 0, 0.627676, 0, -0.0723299, 0, 1.1687, -45.3595, 0.955792, 13.4154)
+use_collision = true
+radius = 2.73083
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Rock9" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.690985, 0, 0.722869, 0, 0.861642, 0, -0.851154, 0, 0.813612, -37.2239, 1.01629, -6.90471)
+use_collision = true
+radius = 2.90368
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Rock10" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.995619, 0, 0.0935019, 0, 0.562931, 0, -0.106441, 0, 1.13339, 49.2648, 0.929482, -41.7224)
+use_collision = true
+radius = 2.65566
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Rock11" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.241574, 0, 0.970383, 0, 0.841846, 0, -0.892634, 0, 0.222218, 36.3369, 0.876937, -34.8781)
+use_collision = true
+radius = 2.50553
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Rock12" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.996885, 0, 0.0788636, 0, 0.761495, 0, -0.0830631, 0, 1.04997, -29.9959, 1.2215, -8.06122)
+use_collision = true
+radius = 3.48999
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Rock13" type="CSGSphere3D" parent="Rocks"]
+transform = Transform3D(0.505782, 0, 0.862661, 0, 0.86546, 0, -0.690424, 0, 0.404798, -31.3609, 1.14967, 34.8786)
+use_collision = true
+radius = 3.28476
+radial_segments = 8
+rings = 4
+material = SubResource("M18")
+
+[node name="Props" type="Node3D" parent="."]
+
+
+[node name="Trunk0" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7.74739, 0.6, -28.7257)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA0" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7.74739, 2, -28.7257)
+use_collision = true
+radius = 1.6
+height = 2.16489
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB0" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7.74739, 3.57446, -28.7257)
+use_collision = true
+radius = 1.1
+height = 1.96808
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk1" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.4474, 0.6, 22.6521)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA1" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.4474, 2, 22.6521)
+use_collision = true
+radius = 1.6
+height = 2.57939
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB1" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.4474, 3.87592, 22.6521)
+use_collision = true
+radius = 1.1
+height = 2.3449
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk2" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 24.0499, 0.6, -52.3384)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA2" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 24.0499, 2, -52.3384)
+use_collision = true
+radius = 1.6
+height = 2.54853
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB2" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 24.0499, 3.85348, -52.3384)
+use_collision = true
+radius = 1.1
+height = 2.31685
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk3" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 41.5451, 0.6, 43.4106)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA3" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 41.5451, 2, 43.4106)
+use_collision = true
+radius = 1.6
+height = 1.9617
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB3" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 41.5451, 3.42669, 43.4106)
+use_collision = true
+radius = 1.1
+height = 1.78336
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk4" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 5.75349, 0.6, -43.0038)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA4" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 5.75349, 2, -43.0038)
+use_collision = true
+radius = 1.6
+height = 2.5261
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB4" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 5.75349, 3.83717, -43.0038)
+use_collision = true
+radius = 1.1
+height = 2.29646
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk5" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -33.8041, 0.6, -17.2562)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA5" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -33.8041, 2, -17.2562)
+use_collision = true
+radius = 1.6
+height = 2.68726
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB5" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -33.8041, 3.95437, -17.2562)
+use_collision = true
+radius = 1.1
+height = 2.44297
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk7" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -3.07904, 0.6, -16.9855)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA7" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -3.07904, 2, -16.9855)
+use_collision = true
+radius = 1.6
+height = 2.3725
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB7" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -3.07904, 3.72546, -16.9855)
+use_collision = true
+radius = 1.1
+height = 2.15682
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk8" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 19.9506, 0.6, -43.0776)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA8" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 19.9506, 2, -43.0776)
+use_collision = true
+radius = 1.6
+height = 1.76717
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB8" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 19.9506, 3.28522, -43.0776)
+use_collision = true
+radius = 1.1
+height = 1.60652
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk9" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 17.3747, 0.6, 41.5858)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA9" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 17.3747, 2, 41.5858)
+use_collision = true
+radius = 1.6
+height = 2.43179
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB9" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 17.3747, 3.76857, 41.5858)
+use_collision = true
+radius = 1.1
+height = 2.21071
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk10" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.7502, 0.6, -31.2944)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA10" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.7502, 2, -31.2944)
+use_collision = true
+radius = 1.6
+height = 2.41339
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB10" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.7502, 3.75519, -31.2944)
+use_collision = true
+radius = 1.1
+height = 2.19399
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk11" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 2.48686, 0.6, -43.2219)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA11" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 2.48686, 2, -43.2219)
+use_collision = true
+radius = 1.6
+height = 1.72051
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB11" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 2.48686, 3.25128, -43.2219)
+use_collision = true
+radius = 1.1
+height = 1.5641
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk12" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -1.29719, 0.6, -50.0584)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA12" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -1.29719, 2, -50.0584)
+use_collision = true
+radius = 1.6
+height = 1.87809
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB12" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -1.29719, 3.36589, -50.0584)
+use_collision = true
+radius = 1.1
+height = 1.70736
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk13" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.31584, 0.6, 51.1459)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA13" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.31584, 2, 51.1459)
+use_collision = true
+radius = 1.6
+height = 2.4339
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB13" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.31584, 3.77011, 51.1459)
+use_collision = true
+radius = 1.1
+height = 2.21264
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk14" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.2024, 0.6, 49.3921)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA14" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.2024, 2, 49.3921)
+use_collision = true
+radius = 1.6
+height = 2.08294
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB14" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.2024, 3.51486, 49.3921)
+use_collision = true
+radius = 1.1
+height = 1.89358
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk15" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 32.2551, 0.6, -49.1567)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA15" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 32.2551, 2, -49.1567)
+use_collision = true
+radius = 1.6
+height = 1.96715
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB15" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 32.2551, 3.43066, -49.1567)
+use_collision = true
+radius = 1.1
+height = 1.78832
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk16" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 21.3025, 0.6, -43.5928)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA16" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 21.3025, 2, -43.5928)
+use_collision = true
+radius = 1.6
+height = 1.7229
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB16" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 21.3025, 3.25302, -43.5928)
+use_collision = true
+radius = 1.1
+height = 1.56628
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Trunk17" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -46.5555, 0.6, -18.0096)
+radius = 0.2
+height = 1.2
+sides = 8
+material = SubResource("M19")
+
+[node name="PineA17" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -46.5555, 2, -18.0096)
+use_collision = true
+radius = 1.6
+height = 1.97451
+sides = 8
+cone = true
+material = SubResource("M20")
+
+[node name="PineB17" type="CSGCylinder3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -46.5555, 3.436, -18.0096)
+use_collision = true
+radius = 1.1
+height = 1.79501
+sides = 8
+cone = true
+material = SubResource("M21")
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 6.2)

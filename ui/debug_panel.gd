@@ -42,11 +42,12 @@ func _process(_delta: float) -> void:
 	for id in _system_toggles:
 		_system_toggles[id].set_pressed_no_signal(TrainState.is_system_damaged(id))
 	_track_button.text = "Track switch: %s  (click to flip)" % TrainState.current_track
-	_info.text = "Speed %.1f u/s   Distance %.0f u\nFuel %.0f%%   Brake strength %.0f%%\nDelivery timer (placeholder) %s" % [
+	_info.text = "Speed %.1f u/s   Distance %.0f u\nFuel %.0f%%   Target speed %.1f   Wear x%.2f\nDelivery timer (placeholder) %s" % [
 		TrainState.speed,
 		TrainState.distance,
 		100.0 * TrainState.fuel / TrainState.max_fuel,
-		100.0 * TrainState.brake_effectiveness(),
+		TrainState.target_speed(),
+		TrainState.wear_factor(),
 		GameState.format_time(),
 	]
 
@@ -60,11 +61,9 @@ func _build() -> void:
 	rows.add_child(_info)
 	rows.add_child(HSeparator.new())
 
-	_add_slider("Throttle", &"throttle", 0.0, 1.0, 0.05)
-	_add_slider("Brake", &"brake", 0.0, 1.0, 0.05)
 	_add_slider("Speed", &"speed", 0.0, TrainState.max_speed * TrainState.boost_speed_multiplier, 0.5)
 	_add_slider("Fuel", &"fuel", 0.0, TrainState.max_fuel, 1.0)
-	_add_slider("Brake fluid", &"brake_fluid", 0.0, TrainState.max_brake_fluid, 1.0)
+	_add_slider("Coolant", &"coolant", 0.0, TrainState.max_coolant, 1.0)
 	_add_slider("Furnace temp", &"furnace_temp", 0.0, TrainState.max_furnace_temp, 1.0)
 	_add_slider("Hallucination", &"hallucination_intensity", 0.0, 1.0, 0.01)
 
@@ -138,7 +137,7 @@ func _add_toggle(title: String, prop: StringName) -> void:
 	_toggles[prop] = box
 
 
-## Fire and gas lights are normally set by events; fuel and brakes follow their levels.
+## Fire and gas lights are normally set by events; fuel and coolant follow their levels.
 func _add_warning_toggle(title: String, id: StringName) -> void:
 	var box := CheckBox.new()
 	box.text = title

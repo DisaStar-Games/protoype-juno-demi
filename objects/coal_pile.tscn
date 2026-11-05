@@ -42,3 +42,13 @@ mesh = SubResource("BoxMesh_top")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 shape = SubResource("BoxShape3D_pile")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
+billboard = 1
+no_depth_test = true
+fixed_size = false
+pixel_size = 0.006
+font_size = 48
+outline_size = 12
+text = "COAL"

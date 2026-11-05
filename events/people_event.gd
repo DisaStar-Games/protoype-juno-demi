@@ -42,3 +42,7 @@ func _on_horn() -> void:
 		GameState.post_message("Too late!")
 	else:
 		resolve()
+
+
+func task_text() -> String:
+	return "People on the track: sound the horn"

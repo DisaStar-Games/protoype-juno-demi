@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://objects/supply_point.gd" id="1_supply"]
+
+[sub_resource type="StandardMaterial3D" id="Mat"]
+albedo_color = Color(0.2, 0.4, 0.8, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="Mesh"]
+material = SubResource("Mat")
+size = Vector3(0.7, 0.9, 0.7)
+
+[sub_resource type="BoxShape3D" id="Shape"]
+size = Vector3(0.7, 0.9, 0.7)
+
+[node name="WaterBarrel" type="StaticBody3D"]
+script = ExtResource("1_supply")
+prompt_text = "Take"
+hold_time = 1.0
+item_id = &"water"
+amount = 2
+title = "WATER"
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("Mesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+billboard = 1
+no_depth_test = true
+pixel_size = 0.005
+font_size = 48
+outline_size = 12
+text = "WATER"

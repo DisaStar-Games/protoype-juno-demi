@@ -56,6 +56,12 @@ func remaining_distance() -> float:
 
 # --- Hooks for subclasses ------------------------------------------------------
 
+## One line for the cockpit task screen while this event is live: what the player has to do
+## right now. Return "" for events that need nothing from the player.
+func task_text() -> String:
+	return ""
+
+
 ## Text on the beacon sign (see HazardMarker); the default is the name and distance.
 func sign_text() -> String:
 	return "%s\n%d u" % [display_name.to_upper(), maxi(0, roundi(remaining_distance()))]
@@ -92,6 +98,12 @@ func on_resolve() -> void:
 
 
 func on_fail() -> void:
+	pass
+
+
+## Called when a still-running event is removed (F2 "Clear all events", a reset): undo what
+## it did so nothing stays stuck (a fire, a leak, a warning lamp).
+func on_cancel() -> void:
 	pass
 
 
@@ -181,3 +193,8 @@ func crash_effects(strength := 1.0) -> void:
 	var player := get_tree().get_first_node_in_group("player")
 	if player != null and player.camera.has_method("kick"):
 		player.camera.kick(strength, 0.6 + 0.8 * strength)
+
+
+func _exit_tree() -> void:
+	if is_live():
+		on_cancel()
