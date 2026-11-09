@@ -25,6 +25,7 @@ func _ready() -> void:
 	_update_route(TrainState.distance)
 	_update_temp(TrainState.furnace_temp)
 	_update_timer(GameState.time_left)
+	timer_gauge.visible = GameState.delivery_timer_enabled
 
 
 func _update_speed(speed: float) -> void:

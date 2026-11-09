@@ -65,8 +65,6 @@ func _physics_process(delta: float) -> void:
 		speed = run_speed
 		if Input.is_action_pressed("crouch"):
 			speed = crouch_speed
-		elif Input.is_action_pressed("walk"):
-			speed = walk_speed
 
 	if Input.is_action_pressed("crouch"):
 		$CollisionShape3D.shape.height = lerp($CollisionShape3D.shape.height, 1.38, 0.1)

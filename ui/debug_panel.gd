@@ -42,13 +42,12 @@ func _process(_delta: float) -> void:
 	for id in _system_toggles:
 		_system_toggles[id].set_pressed_no_signal(TrainState.is_system_damaged(id))
 	_track_button.text = "Track switch: %s  (click to flip)" % TrainState.current_track
-	_info.text = "Speed %.1f u/s   Distance %.0f u\nFuel %.0f%%   Target speed %.1f   Wear x%.2f\nDelivery timer (placeholder) %s" % [
+	_info.text = "Speed %.1f u/s   Distance %.0f u\nFuel %.0f%%   Target speed %.1f   Wear x%.2f" % [
 		TrainState.speed,
 		TrainState.distance,
 		100.0 * TrainState.fuel / TrainState.max_fuel,
 		TrainState.target_speed(),
 		TrainState.wear_factor(),
-		GameState.format_time(),
 	]
 
 

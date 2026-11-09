@@ -10,6 +10,8 @@ signal pressed
 @export var cap_color := Color(0.85, 0.2, 0.2)
 ## How far the cap sinks when pressed, in metres.
 @export var travel := 0.025
+## Played when the button is pressed (horn, boost, radio...).
+@export var press_sound: AudioStream
 
 ## Per-button material so a button can glow (emission) independently of others.
 var cap_material: StandardMaterial3D
@@ -38,6 +40,7 @@ func interact(player: Node) -> void:
 	if refuse_if_broken():
 		return
 	_animate_press()
+	Sfx.play_at(self, press_sound)
 	pressed.emit()
 	_on_pressed(player)
 

@@ -13,6 +13,8 @@ extends Interactable
 @export var max_stock := 10
 ## Units it refills by per minute (0 = never).
 @export var regen_per_minute := 0.0
+## Played when you take something (set it on the water barrel for the water sound).
+@export var take_sound: AudioStream
 
 var _regen := 0.0
 
@@ -51,6 +53,7 @@ func interact(_player: Node) -> void:
 	if taken == 0:
 		GameState.post_message("You can't carry more %s." % String(Inventory.INFO[item_id]["name"]).to_lower())
 		return
+	Sfx.play_at(self, take_sound)
 	if stock > 0:
 		stock -= taken
 	_update_label()

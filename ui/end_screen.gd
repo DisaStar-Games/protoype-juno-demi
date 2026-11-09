@@ -21,10 +21,9 @@ func _on_game_over(won: bool, why: String) -> void:
 	title.text = "DELIVERED" if won else "DELIVERY FAILED"
 	title.modulate = Color(0.5, 1.0, 0.55) if won else Color(1.0, 0.45, 0.4)
 	reason.text = why
-	stats.text = "Distance  %d / %d u\nTime left  %s\nFuel  %d%%" % [
+	stats.text = "Distance  %d / %d u\nFuel  %d%%" % [
 		TrainState.distance,
 		GameState.route_length,
-		GameState.format_time(),
 		roundi(100.0 * TrainState.fuel / TrainState.max_fuel),
 	]
 	visible = true

@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://chal58r1urii2"]
+
+[ext_resource type="PackedScene" uid="uid://x55g6phact6a" path="res://3dmodel/Furnace.glb" id="1_unxsl"]
+
+[node name="Furnace2" unique_id=1125353645 instance=ExtResource("1_unxsl")]

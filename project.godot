@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="prototype-juno-demi"
-run/main_scene="res://levels/TrainBlockout.tscn"
+run/main_scene="uid://cwwxxjgv1ccn3"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 

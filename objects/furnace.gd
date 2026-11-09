@@ -5,6 +5,9 @@ extends Interactable
 ## The lower bar shows its temperature (rises with boost and low coolant); at the top it
 ## catches fire, see events/furnace_fire_event.gd.
 
+## Played when a coal goes into the furnace (shoveled or thrown in).
+@export var coal_sound: AudioStream
+
 @onready var bar_pivot: Node3D = $ProgressBar/BarPivot
 @onready var intake: Area3D = $Intake
 @onready var temp_pivot: Node3D = $TempBar/TempPivot
@@ -14,6 +17,12 @@ var _temp_material := StandardMaterial3D.new()
 
 
 func _ready() -> void:
+	# The furnace's own sound (the AudioStreamPlayer3D child): start it and keep it looping.
+	var hum := get_node_or_null("AudioStreamPlayer3D") as AudioStreamPlayer3D
+	if hum != null and hum.stream != null:
+		TrainAmbience.make_loop(hum.stream)
+		if not hum.playing:
+			hum.play()
 	# Any coal thrown through the intake zone gets eaten and fuels the train.
 	add_to_group("furnace")
 	intake.body_entered.connect(_on_intake_body_entered)
@@ -47,6 +56,7 @@ func _on_intake_body_entered(body: Node) -> void:
 
 ## Fuels the train by one coal's worth.
 func add_coal() -> void:
+	Sfx.play_at(self, coal_sound)
 	TrainState.add_fuel(TrainState.fuel_per_coal)
 
 

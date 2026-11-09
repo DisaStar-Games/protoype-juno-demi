@@ -1,6 +1,10 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://0gni63bifras"]
 
-[ext_resource type="Script" path="res://objects/leak_point.gd" id="1_leak"]
+[ext_resource type="Script" uid="uid://cdm5s3hnrny3" path="res://objects/leak_point.gd" id="1_leak"]
+[ext_resource type="AudioStream" uid="uid://bumaf6xrpy6xw" path="res://sfx/steam.mp3" id="2_kihb1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_leak"]
+size = Vector3(0.6, 0.6, 0.6)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_clamp"]
 albedo_color = Color(0.25, 0.27, 0.3, 1)
@@ -11,40 +15,34 @@ roughness = 0.5
 material = SubResource("StandardMaterial3D_clamp")
 size = Vector3(0.3, 0.3, 0.2)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_leak"]
-size = Vector3(0.6, 0.6, 0.6)
-
-[sub_resource type="Gradient" id="Gradient_gas"]
-offsets = PackedFloat32Array(0, 1)
-colors = PackedColorArray(0.4, 1, 0.5, 0.75, 0.2, 0.8, 0.3, 0)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gas"]
 transparency = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
-albedo_color = Color(1, 1, 1, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_gas"]
 material = SubResource("StandardMaterial3D_gas")
 size = Vector3(0.18, 0.18, 0.18)
 
-[node name="LeakPoint" type="StaticBody3D"]
+[sub_resource type="Gradient" id="Gradient_gas"]
+colors = PackedColorArray(0.4, 1, 0.5, 0.75, 0.2, 0.8, 0.3, 0)
+
+[node name="LeakPoint" type="StaticBody3D" unique_id=963315423]
 script = ExtResource("1_leak")
-repair_time = 3.0
+hiss_sound = ExtResource("2_kihb1")
 action_text = "Tighten the leaking joint"
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=547708613]
 shape = SubResource("BoxShape3D_leak")
 
-[node name="Joint" type="MeshInstance3D" parent="."]
+[node name="Joint" type="MeshInstance3D" parent="." unique_id=1484626811]
 mesh = SubResource("BoxMesh_clamp")
 
-[node name="Puff" type="CPUParticles3D" parent="."]
+[node name="Puff" type="CPUParticles3D" parent="." unique_id=1087768307]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16, 0, 0)
 emitting = false
 amount = 28
 lifetime = 1.3
-local_coords = false
 mesh = SubResource("BoxMesh_gas")
 direction = Vector3(1, 0.3, 0)
 spread = 35.0

@@ -21,7 +21,30 @@ signal repaired
 @export var cost_item_id: StringName = &""
 @export var cost_amount := 0
 
+@export_group("Sounds")
+## Loops while the player holds E on this (filling the tank, tightening the pipe).
+@export var working_sound: AudioStream
+## Played once when the repair is finished.
+@export var done_sound: AudioStream
+
 var needs_repair := false
+
+var _working_player: AudioStreamPlayer3D
+var _last_hold_msec := -1000
+
+
+func _process(_delta: float) -> void:
+	# The hold ended when interact_hold stops being called.
+	if _working_player != null and _working_player.playing and Time.get_ticks_msec() - _last_hold_msec > 150:
+		Sfx.set_playing(_working_player, false)
+
+
+func interact_hold(_player: Node, _delta: float) -> void:
+	if needs_repair and get_hold_time(_player) > 0.0:
+		_last_hold_msec = Time.get_ticks_msec()
+		if _working_player == null:
+			_working_player = Sfx.loop_player(self, working_sound) # made on first use
+		Sfx.set_playing(_working_player, true)
 
 
 func can_interact(_player: Node) -> bool:
@@ -54,6 +77,8 @@ func interact(player: Node) -> void:
 	if consume_item:
 		player.held_item.consume()
 	needs_repair = false
+	Sfx.set_playing(_working_player, false)
+	Sfx.play_at(self, done_sound)
 	repaired.emit()
 
 

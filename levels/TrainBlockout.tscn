@@ -23,6 +23,8 @@
 [ext_resource type="PackedScene" path="res://cockpit/map_screen.tscn" id="32_mapscreen"]
 [ext_resource type="PackedScene" path="res://objects/water_barrel.tscn" id="33_water"]
 [ext_resource type="PackedScene" path="res://objects/ammo_crate.tscn" id="34_ammo"]
+[ext_resource type="Script" path="res://objects/furnace_sign.gd" id="60_sign"]
+[ext_resource type="PackedScene" path="res://world/outside_fog.tscn" id="61_fog"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
 sky_top_color = Color(0.015, 0.025, 0.08, 1)
@@ -44,6 +46,11 @@ ssao_enabled = true
 fog_enabled = true
 fog_light_color = Color(0.06, 0.09, 0.18, 1)
 fog_density = 0.006
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0
+volumetric_fog_length = 110.0
+volumetric_fog_detail_spread = 1.5
+volumetric_fog_ambient_inject = 0.4
 
 [sub_resource type="StandardMaterial3D" id="Mat_floor"]
 albedo_color = Color(0.13, 0.12, 0.12, 1)
@@ -637,7 +644,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 4.2, 29)
 pixel_size = 0.01
 billboard = 1
 modulate = Color(1, 0.6, 0.3, 1)
-text = "Furnace"
+script = ExtResource("60_sign")
+text = "FURNACE"
 font_size = 48
 
 [node name="Label14" type="Label3D" parent="Labels" unique_id=431708295]
@@ -805,3 +813,5 @@ figure_scene = ExtResource("22_figure")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 0, 2.2)
 system_id = &"controls"
 title = "CONSOLE"
+
+[node name="OutsideFog" parent="." instance=ExtResource("61_fog")]

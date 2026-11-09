@@ -6,6 +6,8 @@ extends Interactable
 
 @export var angle_track_a := 25.0
 @export var angle_track_b := -25.0
+## Played when the lever is thrown.
+@export var switch_sound: AudioStream
 
 var _tween: Tween
 
@@ -38,8 +40,10 @@ func interact(_player: Node) -> void:
 		if not Journey.toggle_selection():
 			GameState.post_message("There is no junction to switch right now.")
 			return
+		Sfx.play_at(self, switch_sound)
 		GameState.post_message("Track set to %s" % RouteGraph.station_name(Journey.selected_offer()["id"]))
 		return
+	Sfx.play_at(self, switch_sound)
 	TrainState.current_track = _other_track()
 	GameState.post_message("Track switch set to %s" % TrainState.current_track)
 

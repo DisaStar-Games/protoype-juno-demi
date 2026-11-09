@@ -18,6 +18,8 @@ signal penalty_applied(seconds: float, reason: String)
 signal game_over(won: bool, reason: String)
 
 @export var delivery_time := 420.0 # 7:00
+## The delivery countdown is switched off for now: no timer, no "late" loss, no time penalties.
+@export var delivery_timer_enabled := false
 ## Distance (TrainState units) that counts as arrived; the dashboard shows progress to it.
 @export var route_length := 6000.0
 
@@ -53,6 +55,8 @@ func tick(delta: float) -> void:
 		checkpoint_reached.emit(next_checkpoint, checkpoint_names[next_checkpoint])
 		next_checkpoint += 1
 
+	if not delivery_timer_enabled:
+		return
 	var before := ceili(time_left)
 	time_left = maxf(time_left - delta, 0.0)
 	if ceili(time_left) != before:
@@ -77,7 +81,7 @@ func post_message(text: String) -> void:
 
 ## Takes seconds off the delivery timer. Running out ends the run on the next tick.
 func apply_time_penalty(seconds: float, reason: String) -> void:
-	if state != State.RUNNING:
+	if state != State.RUNNING or not delivery_timer_enabled:
 		return
 	time_left = maxf(time_left - seconds, 0.0)
 	time_left_changed.emit(time_left)

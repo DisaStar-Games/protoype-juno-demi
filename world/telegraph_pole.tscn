@@ -36,3 +36,11 @@ mesh = SubResource("BoxMesh_arm")
 [node name="Lamp" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.2, 0)
 mesh = SubResource("BoxMesh_lamp")
+
+[node name="LampLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.9, 0)
+light_color = Color(1, 0.62, 0.28, 1)
+light_energy = 3.0
+light_volumetric_fog_energy = 2.0
+omni_range = 11.0
+omni_attenuation = 1.5

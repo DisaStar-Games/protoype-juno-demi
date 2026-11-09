@@ -1,12 +1,15 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dsa13r3bgxlr7"]
 
-[ext_resource type="Script" path="res://world/scenery_strip.gd" id="1_strip"]
+[ext_resource type="Script" uid="uid://cl3fjbivth4nk" path="res://world/scenery_strip.gd" id="1_strip"]
 [ext_resource type="PackedScene" path="res://world/telegraph_pole.tscn" id="2_pole"]
 [ext_resource type="PackedScene" path="res://world/tree_block.tscn" id="3_tree"]
+[ext_resource type="AudioStream" uid="uid://c8ib6awwh58fe" path="res://sfx/game_train_soundv2.mp3" id="4_a73vh"]
+[ext_resource type="AudioStream" uid="uid://q6jc6dy65cpa" path="res://sfx/musicsoundtrackv2.mp3" id="6_a73vh"]
+[ext_resource type="Script" uid="uid://bf8kyvnvkhplv" path="res://world/train_ambience.gd" id="70_ambience"]
+[ext_resource type="Script" uid="uid://b2i5kuv22h1ru" path="res://world/train_music.gd" id="71_music"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ground"]
 albedo_color = Color(0.05, 0.07, 0.06, 1)
-roughness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_ground"]
 material = SubResource("StandardMaterial3D_ground")
@@ -14,7 +17,6 @@ size = Vector3(300, 0.2, 520)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ballast"]
 albedo_color = Color(0.12, 0.12, 0.13, 1)
-roughness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_ballast"]
 material = SubResource("StandardMaterial3D_ballast")
@@ -29,39 +31,37 @@ roughness = 0.4
 material = SubResource("StandardMaterial3D_rail")
 size = Vector3(0.08, 0.1, 520)
 
-[node name="Outside" type="Node3D"]
+[node name="Outside" type="Node3D" unique_id=35951919]
 
-[node name="Moon" type="DirectionalLight3D" parent="."]
+[node name="Moon" type="DirectionalLight3D" parent="." unique_id=1786887951]
 transform = Transform3D(0.866025, 0, 0.5, 0.353553, 0.707107, -0.612372, -0.353553, 0.707107, 0.612372, 0, 10, 0)
 light_color = Color(0.55, 0.65, 1, 1)
 light_energy = 0.4
 shadow_enabled = true
 directional_shadow_max_distance = 90.0
 
-[node name="Ground" type="MeshInstance3D" parent="."]
+[node name="Ground" type="MeshInstance3D" parent="." unique_id=1673756477]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1, -70)
 mesh = SubResource("BoxMesh_ground")
 
-[node name="Ballast" type="MeshInstance3D" parent="."]
+[node name="Ballast" type="MeshInstance3D" parent="." unique_id=1703607426]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.94, -70)
 mesh = SubResource("BoxMesh_ballast")
 
-[node name="RailLeft" type="MeshInstance3D" parent="."]
+[node name="RailLeft" type="MeshInstance3D" parent="." unique_id=342072512]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.72, -0.83, -70)
 mesh = SubResource("BoxMesh_rail")
 
-[node name="RailRight" type="MeshInstance3D" parent="."]
+[node name="RailRight" type="MeshInstance3D" parent="." unique_id=377421289]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.72, -0.83, -70)
 mesh = SubResource("BoxMesh_rail")
 
-[node name="Poles" type="Node3D" parent="."]
+[node name="Poles" type="Node3D" parent="." unique_id=717492810]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 script = ExtResource("1_strip")
 prop_scene = ExtResource("2_pole")
-spacing = 12.0
-x_offset = 5.0
 
-[node name="FarTrees" type="Node3D" parent="."]
+[node name="FarTrees" type="Node3D" parent="." unique_id=1210599085]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 script = ExtResource("1_strip")
 prop_scene = ExtResource("3_tree")
@@ -70,3 +70,16 @@ x_offset = 16.0
 jitter_x = 6.0
 scale_jitter = 0.5
 random_seed = 7
+
+[node name="TrainAmbience" type="AudioStreamPlayer" parent="." unique_id=2041191350]
+stream = ExtResource("4_a73vh")
+volume_db = -1.333
+pitch_scale = 0.81
+script = ExtResource("70_ambience")
+loudest_db = -3.0
+quietest_moving_db = -10.0
+
+[node name="Music" type="AudioStreamPlayer" parent="." unique_id=42014380]
+stream = ExtResource("6_a73vh")
+volume_db = -15.33
+script = ExtResource("71_music")

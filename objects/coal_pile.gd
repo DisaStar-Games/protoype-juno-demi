@@ -7,6 +7,10 @@ extends Interactable
 @export var coal_scene: PackedScene
 ## How many cubes the pile starts with.
 @export var start_amount := 10
+## How many cubes one press takes (as many as fit in your pockets).
+@export var pickup_amount := 4
+## Played when you take coal.
+@export var pickup_sound: AudioStream
 
 ## Coal cubes left in the pile.
 var coal_left := 0:
@@ -30,7 +34,7 @@ func _ready() -> void:
 func get_prompt(_player: Node) -> String:
 	if stolen or coal_left <= 0:
 		return "The pile is empty!"
-	return "%s (%d left)" % [prompt_text, coal_left]
+	return "%s up to %d  (%d left)" % [prompt_text, pickup_amount, coal_left]
 
 
 func can_interact(_player: Node) -> bool:
@@ -47,7 +51,9 @@ func interact(_player: Node) -> void:
 	if Inventory.is_full(&"coal"):
 		GameState.post_message("Your pockets are full of coal.")
 		return
-	coal_left -= Inventory.add(&"coal", 1)
+	var taken := Inventory.add(&"coal", mini(pickup_amount, coal_left))
+	coal_left -= taken
+	Sfx.play_at(self, pickup_sound)
 
 
 ## The bandits grab a share of what is left.
