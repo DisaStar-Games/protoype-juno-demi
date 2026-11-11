@@ -1,0 +1,1312 @@
+[gd_scene format=3 uid="uid://c1ltdn8klnkup"]
+
+[ext_resource type="PackedScene" uid="uid://jyncanbkjjnq" path="res://player/player.tscn" id="1_player"]
+[ext_resource type="Script" uid="uid://btm2shmextd0j" path="res://levels/train_yard.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://c58ekjjwheqqr" path="res://objects/crazy_tubes.tscn" id="3_jossx"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.4, 0.6, 0.9, 1)
+sky_horizon_color = Color(0.75, 0.85, 0.95, 1)
+ground_bottom_color = Color(0.5, 0.6, 0.7, 1)
+ground_horizon_color = Color(0.75, 0.85, 0.95, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 3
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="M_ground"]
+albedo_color = Color(0.33, 0.36, 0.24, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_slab"]
+albedo_color = Color(0.5, 0.5, 0.5, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_path"]
+albedo_color = Color(0.5, 0.5, 0.48, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_gravel"]
+albedo_color = Color(0.45, 0.43, 0.4, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_metal"]
+albedo_color = Color(0.4, 0.42, 0.45, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_wood"]
+albedo_color = Color(0.5, 0.36, 0.2, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_train"]
+albedo_color = Color(0.22, 0.24, 0.3, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_dark"]
+albedo_color = Color(0.05, 0.05, 0.07, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_car"]
+albedo_color = Color(0.3, 0.27, 0.27, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_building"]
+albedo_color = Color(0.28, 0.3, 0.38, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_rail"]
+albedo_color = Color(0.35, 0.45, 0.8, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_rock"]
+albedo_color = Color(0.5, 0.42, 0.38, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_container"]
+albedo_color = Color(0.6, 0.28, 0.22, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_leaf"]
+albedo_color = Color(0.2, 0.42, 0.2, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="M_cliff"]
+albedo_color = Color(0.2, 0.22, 0.3, 1)
+roughness = 0.9
+
+[node name="TrainYard" type="Node3D" unique_id=28684263]
+script = ExtResource("2_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=770841194]
+environment = SubResource("Env")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1214299956]
+transform = Transform3D(0.8, -0.35, 0.49, 0, 0.81, 0.58, -0.6, -0.46, 0.65, 0, 30, 0)
+light_energy = 0.9
+shadow_enabled = true
+
+[node name="Ground" type="Node3D" parent="." unique_id=46231005]
+
+[node name="Terrain" type="CSGBox3D" parent="Ground" unique_id=23923756]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, -0.5, -10)
+use_collision = true
+size = Vector3(170, 1, 170)
+material = SubResource("M_ground")
+
+[node name="YardSlab" type="CSGBox3D" parent="Ground" unique_id=1917548705]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52, 0.075, -12)
+use_collision = true
+size = Vector3(40, 0.15, 46)
+material = SubResource("M_slab")
+
+[node name="PathToTrain" type="CSGBox3D" parent="Ground" unique_id=795210265]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.04, 8)
+use_collision = true
+size = Vector3(40, 0.08, 5)
+material = SubResource("M_path")
+
+[node name="Track" type="Node3D" parent="." unique_id=1039357980]
+
+[node name="Bed" type="CSGBox3D" parent="Track" unique_id=293332938]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.1, 0)
+use_collision = true
+size = Vector3(64, 0.2, 4.2)
+material = SubResource("M_gravel")
+
+[node name="Rail" type="CSGBox3D" parent="Track" unique_id=1235935298]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.28, -0.75)
+use_collision = true
+size = Vector3(64, 0.12, 0.12)
+material = SubResource("M_metal")
+
+[node name="Rail2" type="CSGBox3D" parent="Track" unique_id=821230776]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.28, 0.75)
+use_collision = true
+size = Vector3(64, 0.12, 0.12)
+material = SubResource("M_metal")
+
+[node name="Sleeper" type="CSGBox3D" parent="Track" unique_id=1668168707]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper2" type="CSGBox3D" parent="Track" unique_id=524097949]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper3" type="CSGBox3D" parent="Track" unique_id=911886876]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper4" type="CSGBox3D" parent="Track" unique_id=1382397338]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper5" type="CSGBox3D" parent="Track" unique_id=1258293643]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper6" type="CSGBox3D" parent="Track" unique_id=93931827]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper7" type="CSGBox3D" parent="Track" unique_id=439786377]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper8" type="CSGBox3D" parent="Track" unique_id=1553094674]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper9" type="CSGBox3D" parent="Track" unique_id=1922072321]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper10" type="CSGBox3D" parent="Track" unique_id=2139945249]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper11" type="CSGBox3D" parent="Track" unique_id=513031380]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper12" type="CSGBox3D" parent="Track" unique_id=797323396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper13" type="CSGBox3D" parent="Track" unique_id=774471087]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper14" type="CSGBox3D" parent="Track" unique_id=311832083]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper15" type="CSGBox3D" parent="Track" unique_id=675712550]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper16" type="CSGBox3D" parent="Track" unique_id=1851031292]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper17" type="CSGBox3D" parent="Track" unique_id=1409662718]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper18" type="CSGBox3D" parent="Track" unique_id=954563131]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper19" type="CSGBox3D" parent="Track" unique_id=1617206952]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper20" type="CSGBox3D" parent="Track" unique_id=381631897]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper21" type="CSGBox3D" parent="Track" unique_id=1807147234]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper22" type="CSGBox3D" parent="Track" unique_id=1301216336]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper23" type="CSGBox3D" parent="Track" unique_id=1476177161]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper24" type="CSGBox3D" parent="Track" unique_id=1448183787]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper25" type="CSGBox3D" parent="Track" unique_id=82385682]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper26" type="CSGBox3D" parent="Track" unique_id=452417098]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper27" type="CSGBox3D" parent="Track" unique_id=1636256202]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper28" type="CSGBox3D" parent="Track" unique_id=1390271799]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper29" type="CSGBox3D" parent="Track" unique_id=1952983263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper30" type="CSGBox3D" parent="Track" unique_id=1177788355]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper31" type="CSGBox3D" parent="Track" unique_id=1798176685]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper32" type="CSGBox3D" parent="Track" unique_id=1653024392]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Sleeper33" type="CSGBox3D" parent="Track" unique_id=307537802]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 0.22, 0)
+size = Vector3(0.4, 0.1, 2.6)
+material = SubResource("M_wood")
+
+[node name="Train" type="Node3D" parent="." unique_id=1496346742]
+
+[node name="LocoCab" type="CSGBox3D" parent="Train" unique_id=1514889970]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 2.4, 0)
+use_collision = true
+size = Vector3(3, 3.6, 3)
+material = SubResource("M_train")
+
+[node name="LocoBoiler" type="CSGBox3D" parent="Train" unique_id=1056341375]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.95, 0)
+use_collision = true
+size = Vector3(4, 2.7, 2.6)
+material = SubResource("M_train")
+
+[node name="LocoFront" type="CSGBox3D" parent="Train" unique_id=2049314507]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.1, 1, 0)
+use_collision = true
+size = Vector3(0.3, 1.2, 2.8)
+material = SubResource("M_dark")
+
+[node name="Chimney" type="CSGCylinder3D" parent="Train" unique_id=2116113033]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3, 4, 0)
+use_collision = true
+radius = 0.35
+height = 1.7
+material = SubResource("M_dark")
+
+[node name="Wheel" type="CSGCylinder3D" parent="Train" unique_id=1153338215]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.8, 0.75, -1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel2" type="CSGCylinder3D" parent="Train" unique_id=1581906703]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.8, 0.75, 1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel3" type="CSGCylinder3D" parent="Train" unique_id=699491482]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 2.4, 0.75, -1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel4" type="CSGCylinder3D" parent="Train" unique_id=278404299]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 2.4, 0.75, 1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel5" type="CSGCylinder3D" parent="Train" unique_id=1093313241]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 4, 0.75, -1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel6" type="CSGCylinder3D" parent="Train" unique_id=1223488501]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 4, 0.75, 1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel7" type="CSGCylinder3D" parent="Train" unique_id=848891007]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 5.6, 0.75, -1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel8" type="CSGCylinder3D" parent="Train" unique_id=1233256605]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 5.6, 0.75, 1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Car" type="CSGBox3D" parent="Train" unique_id=457073504]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2.25, 0)
+use_collision = true
+size = Vector3(8, 3.2, 3)
+material = SubResource("M_train")
+
+[node name="CarDoor" type="CSGBox3D" parent="Train" unique_id=711131595]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.6, 1.55)
+size = Vector3(1.2, 2, 0.1)
+material = SubResource("M_dark")
+
+[node name="CarUnder" type="CSGBox3D" parent="Train" unique_id=283602649]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.65, 0)
+use_collision = true
+size = Vector3(7, 0.5, 2.4)
+material = SubResource("M_dark")
+
+[node name="Wheel9" type="CSGCylinder3D" parent="Train" unique_id=1425208584]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 9.5, 0.75, -1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel10" type="CSGCylinder3D" parent="Train" unique_id=1990465630]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 9.5, 0.75, 1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel11" type="CSGCylinder3D" parent="Train" unique_id=1080880895]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 14.5, 0.75, -1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel12" type="CSGCylinder3D" parent="Train" unique_id=1797564788]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 14.5, 0.75, 1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Car2" type="CSGBox3D" parent="Train" unique_id=1728067413]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 2.25, 0)
+use_collision = true
+size = Vector3(8, 3.2, 3)
+material = SubResource("M_car")
+
+[node name="CarDoor2" type="CSGBox3D" parent="Train" unique_id=1599457129]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 1.6, 1.55)
+size = Vector3(1.2, 2, 0.1)
+material = SubResource("M_dark")
+
+[node name="CarUnder2" type="CSGBox3D" parent="Train" unique_id=232575217]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0.65, 0)
+use_collision = true
+size = Vector3(7, 0.5, 2.4)
+material = SubResource("M_dark")
+
+[node name="Wheel13" type="CSGCylinder3D" parent="Train" unique_id=1110310887]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 18.5, 0.75, -1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel14" type="CSGCylinder3D" parent="Train" unique_id=1459486172]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 18.5, 0.75, 1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel15" type="CSGCylinder3D" parent="Train" unique_id=784870854]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 23.5, 0.75, -1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel16" type="CSGCylinder3D" parent="Train" unique_id=1640399351]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 23.5, 0.75, 1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Car3" type="CSGBox3D" parent="Train" unique_id=101681112]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 2.25, 0)
+use_collision = true
+size = Vector3(8, 3.2, 3)
+material = SubResource("M_train")
+
+[node name="CarDoor3" type="CSGBox3D" parent="Train" unique_id=1955838281]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 1.6, 1.55)
+size = Vector3(1.2, 2, 0.1)
+material = SubResource("M_dark")
+
+[node name="CarUnder3" type="CSGBox3D" parent="Train" unique_id=1548475569]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0.65, 0)
+use_collision = true
+size = Vector3(7, 0.5, 2.4)
+material = SubResource("M_dark")
+
+[node name="Wheel17" type="CSGCylinder3D" parent="Train" unique_id=157748882]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 27.5, 0.75, -1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel18" type="CSGCylinder3D" parent="Train" unique_id=1737934210]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 27.5, 0.75, 1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel19" type="CSGCylinder3D" parent="Train" unique_id=646438612]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 32.5, 0.75, -1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="Wheel20" type="CSGCylinder3D" parent="Train" unique_id=1126124146]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 32.5, 0.75, 1.6)
+use_collision = true
+radius = 0.55
+height = 0.2
+sides = 12
+material = SubResource("M_dark")
+
+[node name="BoilerHouse" type="Node3D" parent="." unique_id=1583353275]
+
+[node name="LowerBlock" type="CSGBox3D" parent="BoilerHouse" unique_id=1918675628]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 1.75, -8)
+use_collision = true
+size = Vector3(9, 3.5, 8)
+material = SubResource("M_building")
+
+[node name="Deck" type="CSGBox3D" parent="BoilerHouse" unique_id=1551881536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 3.6, -3)
+use_collision = true
+size = Vector3(9, 0.2, 4.4)
+material = SubResource("M_path")
+
+[node name="UpperBlock" type="CSGBox3D" parent="BoilerHouse" unique_id=473835212]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 6.1, -8.8)
+use_collision = true
+size = Vector3(7, 5, 6.4)
+material = SubResource("M_building")
+
+[node name="Door" type="CSGBox3D" parent="BoilerHouse" unique_id=739050632]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4.9, -5.55)
+size = Vector3(1.8, 2.4, 0.15)
+material = SubResource("M_dark")
+
+[node name="DoorBar" type="CSGBox3D" parent="BoilerHouse" unique_id=764358015]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.7, 4.9, -5.45)
+size = Vector3(0.06, 2.2, 0.06)
+material = SubResource("M_metal")
+
+[node name="DoorBar2" type="CSGBox3D" parent="BoilerHouse" unique_id=897995598]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.35, 4.9, -5.45)
+size = Vector3(0.06, 2.2, 0.06)
+material = SubResource("M_metal")
+
+[node name="DoorBar3" type="CSGBox3D" parent="BoilerHouse" unique_id=780069550]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4.9, -5.45)
+size = Vector3(0.06, 2.2, 0.06)
+material = SubResource("M_metal")
+
+[node name="DoorBar4" type="CSGBox3D" parent="BoilerHouse" unique_id=1581367854]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.65, 4.9, -5.45)
+size = Vector3(0.06, 2.2, 0.06)
+material = SubResource("M_metal")
+
+[node name="DoorBar5" type="CSGBox3D" parent="BoilerHouse" unique_id=787232081]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.3, 4.9, -5.45)
+size = Vector3(0.06, 2.2, 0.06)
+material = SubResource("M_metal")
+
+[node name="RailFront" type="CSGBox3D" parent="BoilerHouse" unique_id=1779386893]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4.6, -0.9)
+use_collision = true
+size = Vector3(9, 0.08, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostFront" type="CSGBox3D" parent="BoilerHouse" unique_id=733661158]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.5, 4.1, -0.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostFront2" type="CSGBox3D" parent="BoilerHouse" unique_id=1193051239]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5, 4.1, -0.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostFront3" type="CSGBox3D" parent="BoilerHouse" unique_id=1363103931]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.5, 4.1, -0.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostFront4" type="CSGBox3D" parent="BoilerHouse" unique_id=2024277984]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.5, 4.1, -0.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostFront5" type="CSGBox3D" parent="BoilerHouse" unique_id=554561982]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 4.1, -0.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostFront6" type="CSGBox3D" parent="BoilerHouse" unique_id=496391093]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, 4.1, -0.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostFront7" type="CSGBox3D" parent="BoilerHouse" unique_id=69984777]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.5, 4.1, -0.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostFront8" type="CSGBox3D" parent="BoilerHouse" unique_id=471806832]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 4.1, -0.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostFront9" type="CSGBox3D" parent="BoilerHouse" unique_id=2070134569]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 4.1, -0.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostFront10" type="CSGBox3D" parent="BoilerHouse" unique_id=399158653]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 4.1, -0.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="RailSide" type="CSGBox3D" parent="BoilerHouse" unique_id=844128513]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.4, 4.6, -3)
+use_collision = true
+size = Vector3(0.08, 0.08, 4.4)
+material = SubResource("M_rail")
+
+[node name="PostSide" type="CSGBox3D" parent="BoilerHouse" unique_id=1428383831]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.4, 4.1, -5.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostSide2" type="CSGBox3D" parent="BoilerHouse" unique_id=1785911318]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.4, 4.1, -4.05)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostSide3" type="CSGBox3D" parent="BoilerHouse" unique_id=1547900624]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.4, 4.1, -3)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostSide4" type="CSGBox3D" parent="BoilerHouse" unique_id=394679273]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.4, 4.1, -1.95)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostSide5" type="CSGBox3D" parent="BoilerHouse" unique_id=621985101]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.4, 4.1, -0.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="RailSide2" type="CSGBox3D" parent="BoilerHouse" unique_id=1049873615]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.6, 4.6, -3)
+use_collision = true
+size = Vector3(0.08, 0.08, 4.4)
+material = SubResource("M_rail")
+
+[node name="PostSide6" type="CSGBox3D" parent="BoilerHouse" unique_id=180879517]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.6, 4.1, -5.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostSide7" type="CSGBox3D" parent="BoilerHouse" unique_id=1906292579]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.6, 4.1, -4.05)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostSide8" type="CSGBox3D" parent="BoilerHouse" unique_id=254195576]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.6, 4.1, -3)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostSide9" type="CSGBox3D" parent="BoilerHouse" unique_id=424864226]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.6, 4.1, -1.95)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostSide10" type="CSGBox3D" parent="BoilerHouse" unique_id=473698670]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.6, 4.1, -0.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="Step" type="CSGBox3D" parent="BoilerHouse" unique_id=1621554742]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8, 1.5, -3)
+use_collision = true
+size = Vector3(0.5, 3, 1.5)
+material = SubResource("M_path")
+
+[node name="Step2" type="CSGBox3D" parent="BoilerHouse" unique_id=1373568937]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.3, 1.25, -3)
+use_collision = true
+size = Vector3(0.5, 2.5, 1.5)
+material = SubResource("M_path")
+
+[node name="Step3" type="CSGBox3D" parent="BoilerHouse" unique_id=149570265]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.8, 1, -3)
+use_collision = true
+size = Vector3(0.5, 2, 1.5)
+material = SubResource("M_path")
+
+[node name="Step4" type="CSGBox3D" parent="BoilerHouse" unique_id=1369747056]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.3, 0.75, -3)
+use_collision = true
+size = Vector3(0.5, 1.5, 1.5)
+material = SubResource("M_path")
+
+[node name="Step5" type="CSGBox3D" parent="BoilerHouse" unique_id=1092886762]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 0.5, -3)
+use_collision = true
+size = Vector3(0.5, 1, 1.5)
+material = SubResource("M_path")
+
+[node name="Step6" type="CSGBox3D" parent="BoilerHouse" unique_id=923455086]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.3, 0.25, -3)
+use_collision = true
+size = Vector3(0.5, 0.5, 1.5)
+material = SubResource("M_path")
+
+[node name="Crate" type="CSGBox3D" parent="BoilerHouse" unique_id=1693035518]
+transform = Transform3D(0.9957, 0, 0.09211, 0, 1, 0, -0.09211, 0, 0.9957, -22, 0.5, -5)
+use_collision = true
+material = SubResource("M_wood")
+
+[node name="Crate2" type="CSGBox3D" parent="BoilerHouse" unique_id=708590912]
+transform = Transform3D(0.9833, 0, 0.1818, 0, 1, 0, -0.1818, 0, 0.9833, -22, 1.5, -5)
+use_collision = true
+material = SubResource("M_wood")
+
+[node name="Crate3" type="CSGBox3D" parent="BoilerHouse" unique_id=406790675]
+transform = Transform3D(0.9969, 0, -0.07895, 0, 1, 0, 0.07895, 0, 0.9969, -23.2, 0.5, -4.7)
+use_collision = true
+material = SubResource("M_wood")
+
+[node name="Crate4" type="CSGBox3D" parent="BoilerHouse" unique_id=1823270569]
+transform = Transform3D(0.975, 0, 0.222, 0, 1, 0, -0.222, 0, 0.975, -22.6, 0.5, -3.6)
+use_collision = true
+material = SubResource("M_wood")
+
+[node name="Cabin" type="Node3D" parent="." unique_id=1336940824]
+
+[node name="Hut" type="CSGBox3D" parent="Cabin" unique_id=1678095945]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.7, -32)
+use_collision = true
+size = Vector3(6, 3.4, 5)
+material = SubResource("M_building")
+
+[node name="Roof" type="CSGBox3D" parent="Cabin" unique_id=419696348]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3.55, -32)
+use_collision = true
+size = Vector3(7, 0.3, 6)
+material = SubResource("M_dark")
+
+[node name="HutDoor" type="CSGBox3D" parent="Cabin" unique_id=1284204452]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.1, -29.45)
+size = Vector3(1.2, 2.2, 0.12)
+material = SubResource("M_dark")
+
+[node name="PumpHouse" type="Node3D" parent="." unique_id=1961482934]
+
+[node name="House" type="CSGBox3D" parent="PumpHouse" unique_id=728793734]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 2.2, -17)
+use_collision = true
+size = Vector3(5, 4.4, 5)
+material = SubResource("M_building")
+
+[node name="PipeOut" type="CSGCylinder3D" parent="PumpHouse" unique_id=1466668288]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 33.2, 2.6, -17)
+use_collision = true
+radius = 0.45
+height = 3.6
+sides = 12
+material = SubResource("M_metal")
+
+[node name="Elbow" type="CSGSphere3D" parent="PumpHouse" unique_id=1472385916]
+transform = Transform3D(0.62, 0, 0, 0, 0.62, 0, 0, 0, 0.62, 34.9, 2.6, -17)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_metal")
+
+[node name="PipeDown" type="CSGCylinder3D" parent="PumpHouse" unique_id=129695297]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.9, 1.3, -17)
+use_collision = true
+radius = 0.45
+height = 2.6
+sides = 12
+material = SubResource("M_metal")
+
+[node name="Flange" type="CSGCylinder3D" parent="PumpHouse" unique_id=321132214]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.9, 0.12, -17)
+use_collision = true
+radius = 0.85
+height = 0.24
+sides = 12
+material = SubResource("M_metal")
+
+[node name="Walkway" type="Node3D" parent="." unique_id=986947360]
+
+[node name="Floor" type="CSGBox3D" parent="Walkway" unique_id=1281749207]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.15, -14)
+use_collision = true
+size = Vector3(22, 0.3, 2.2)
+material = SubResource("M_path")
+
+[node name="RailNorth" type="CSGBox3D" parent="Walkway" unique_id=987960680]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 1.15, -15.1)
+use_collision = true
+size = Vector3(22, 0.08, 0.08)
+material = SubResource("M_rail")
+
+[node name="RailSouth" type="CSGBox3D" parent="Walkway" unique_id=2145258577]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 1.15, -12.9)
+use_collision = true
+size = Vector3(22, 0.08, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostN" type="CSGBox3D" parent="Walkway" unique_id=1308016664]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.7, -15.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostS" type="CSGBox3D" parent="Walkway" unique_id=1786130585]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.7, -12.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostN2" type="CSGBox3D" parent="Walkway" unique_id=1995443463]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.7, -15.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostS2" type="CSGBox3D" parent="Walkway" unique_id=67760082]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.7, -12.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostN3" type="CSGBox3D" parent="Walkway" unique_id=1769023449]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.7, -15.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostS3" type="CSGBox3D" parent="Walkway" unique_id=610449047]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.7, -12.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostN4" type="CSGBox3D" parent="Walkway" unique_id=720178367]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0.7, -15.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostS4" type="CSGBox3D" parent="Walkway" unique_id=1086814421]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0.7, -12.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostN5" type="CSGBox3D" parent="Walkway" unique_id=907707918]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0.7, -15.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostS5" type="CSGBox3D" parent="Walkway" unique_id=1830640460]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0.7, -12.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostN6" type="CSGBox3D" parent="Walkway" unique_id=702354074]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0.7, -15.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostS6" type="CSGBox3D" parent="Walkway" unique_id=715702420]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0.7, -12.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostN7" type="CSGBox3D" parent="Walkway" unique_id=1836504701]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.7, -15.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostS7" type="CSGBox3D" parent="Walkway" unique_id=2001290071]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.7, -12.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostN8" type="CSGBox3D" parent="Walkway" unique_id=1246613216]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 0.7, -15.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostS8" type="CSGBox3D" parent="Walkway" unique_id=917212025]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 0.7, -12.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostN9" type="CSGBox3D" parent="Walkway" unique_id=344376987]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5, 0.7, -15.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostS9" type="CSGBox3D" parent="Walkway" unique_id=1164858530]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5, 0.7, -12.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostN10" type="CSGBox3D" parent="Walkway" unique_id=1749181901]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.5, 0.7, -15.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostS10" type="CSGBox3D" parent="Walkway" unique_id=1889102000]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.5, 0.7, -12.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostN11" type="CSGBox3D" parent="Walkway" unique_id=1895107895]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.5, 0.7, -15.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostS11" type="CSGBox3D" parent="Walkway" unique_id=299539594]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.5, 0.7, -12.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostN12" type="CSGBox3D" parent="Walkway" unique_id=1359132632]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.5, 0.7, -15.1)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="PostS12" type="CSGBox3D" parent="Walkway" unique_id=380069306]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.5, 0.7, -12.9)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("M_rail")
+
+[node name="Rocks" type="Node3D" parent="." unique_id=533892024]
+
+[node name="Pile" type="CSGSphere3D" parent="Rocks" unique_id=899576816]
+transform = Transform3D(2.132, 0, -2.387, 0, 3.4, 0, 2.237, 0, 1.998, -5, 1.6, -3.5)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Pile2" type="CSGSphere3D" parent="Rocks" unique_id=234576741]
+transform = Transform3D(2.015, 0, -1.304, 0, 2.5, 0, 1.195, 0, 1.847, -7.5, 1.2, -1)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Pile3" type="CSGSphere3D" parent="Rocks" unique_id=1584292096]
+transform = Transform3D(1.793, 0, -0.1638, 0, 2, 0, 0.1638, 0, 1.793, -3.3, 1, -0.8)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Pile4" type="CSGSphere3D" parent="Rocks" unique_id=866949410]
+transform = Transform3D(1.398, 0, -1.431, 0, 2.6, 0, 1.431, 0, 1.398, -5.6, 3.2, -4.4)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Pile5" type="CSGSphere3D" parent="Rocks" unique_id=1137025778]
+transform = Transform3D(1.997, 0, -0.1177, 0, 1.8, 0, 0.1295, 0, 2.196, -8.8, 1, -5.5)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Mass" type="CSGSphere3D" parent="Rocks" unique_id=134709418]
+transform = Transform3D(2.331, 0, -1.889, 0, 3.8, 0, 1.889, 0, 2.331, -2, 2, -23)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Mass2" type="CSGSphere3D" parent="Rocks" unique_id=417128832]
+transform = Transform3D(2.386, 0, -0.2628, 0, 2.4, 0, 0.2409, 0, 2.187, -4.5, 1.2, -21)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Mass3" type="CSGSphere3D" parent="Rocks" unique_id=587879188]
+transform = Transform3D(1.98, 0, -0.284, 0, 2.6, 0, 0.284, 0, 1.98, 0.2, 1.3, -21)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Mass4" type="CSGSphere3D" parent="Rocks" unique_id=367799648]
+transform = Transform3D(1.414, 0, -1.113, 0, 2.2, 0, 1.113, 0, 1.414, -2.5, 4, -24)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Spire" type="CSGSphere3D" parent="Rocks" unique_id=1429581414]
+transform = Transform3D(0.3492, 0, -1.252, 0, 3.4, 0, 1.252, 0, 0.3492, 24.6, 2.8, -19.5)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Spire2" type="CSGSphere3D" parent="Rocks" unique_id=1805669963]
+transform = Transform3D(1.472, 0, -0.2899, 0, 1.5, 0, 0.2705, 0, 1.374, 25.4, 1, -17.4)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Spire3" type="CSGSphere3D" parent="Rocks" unique_id=1643274495]
+transform = Transform3D(0.8452, 0, -0.3092, 0, 1.8, 0, 0.3092, 0, 0.8452, 24.2, 5.2, -19.6)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Mound" type="CSGCylinder3D" parent="Rocks" unique_id=2029647809]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46, 2.2, -16)
+use_collision = true
+radius = 4.0
+height = 4.4
+sides = 5
+cone = true
+material = SubResource("M_rock")
+
+[node name="MoundBase" type="CSGSphere3D" parent="Rocks" unique_id=1081505784]
+transform = Transform3D(2, 0, 0, 0, 1.6, 0, 0, 0, 2, 48.5, 0.9, -14)
+use_collision = true
+radius = 1.0
+radial_segments = 7
+rings = 4
+material = SubResource("M_rock")
+
+[node name="Yard" type="Node3D" parent="." unique_id=1503619438]
+
+[node name="Container1" type="CSGBox3D" parent="Yard" unique_id=843179705]
+transform = Transform3D(0.9903, 0, -0.1392, 0, 1, 0, 0.1392, 0, 0.9903, 42, 1.55, -5)
+use_collision = true
+size = Vector3(6, 2.6, 2.4)
+material = SubResource("M_container")
+
+[node name="Container2" type="CSGBox3D" parent="Yard" unique_id=1079771764]
+transform = Transform3D(0.9976, 0, 0.06976, 0, 1, 0, -0.06976, 0, 0.9976, 40, 1.55, -9.5)
+use_collision = true
+size = Vector3(6, 2.6, 2.4)
+material = SubResource("M_building")
+
+[node name="Container3" type="CSGBox3D" parent="Yard" unique_id=645986104]
+transform = Transform3D(0.9976, 0, 0.06976, 0, 1, 0, -0.06976, 0, 0.9976, 40.5, 4.1, -9.2)
+use_collision = true
+size = Vector3(6, 2.4, 2.4)
+material = SubResource("M_container")
+
+[node name="Pallet" type="CSGBox3D" parent="Yard" unique_id=703622279]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0.3, 5)
+use_collision = true
+size = Vector3(4, 0.16, 2.2)
+material = SubResource("M_wood")
+
+[node name="Pallet2" type="CSGBox3D" parent="Yard" unique_id=24497137]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0.5, 5)
+use_collision = true
+size = Vector3(4, 0.16, 2.2)
+material = SubResource("M_wood")
+
+[node name="Pallet3" type="CSGBox3D" parent="Yard" unique_id=724933193]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0.7, 5)
+use_collision = true
+size = Vector3(4, 0.16, 2.2)
+material = SubResource("M_wood")
+
+[node name="Pallet4" type="CSGBox3D" parent="Yard" unique_id=590530534]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0.9, 5)
+use_collision = true
+size = Vector3(4, 0.16, 2.2)
+material = SubResource("M_wood")
+
+[node name="Crate5" type="CSGBox3D" parent="Yard" unique_id=213910628]
+transform = Transform3D(0.9978, 0, -0.06667, 0, 1, 0, 0.06667, 0, 0.9978, 56, 0.5, -4)
+use_collision = true
+material = SubResource("M_wood")
+
+[node name="Crate6" type="CSGBox3D" parent="Yard" unique_id=1238634568]
+transform = Transform3D(0.9726, 0, -0.2323, 0, 1, 0, 0.2323, 0, 0.9726, 57.1, 0.5, -4)
+use_collision = true
+material = SubResource("M_wood")
+
+[node name="Crate7" type="CSGBox3D" parent="Yard" unique_id=748032245]
+transform = Transform3D(0.9992, 0, -0.04036, 0, 1, 0, 0.04036, 0, 0.9992, 56.5, 1.5, -4.1)
+use_collision = true
+material = SubResource("M_wood")
+
+[node name="Crate8" type="CSGBox3D" parent="Yard" unique_id=1774566573]
+transform = Transform3D(0.9985, 0, 0.05407, 0, 1, 0, -0.05407, 0, 0.9985, 58.5, 0.5, -6)
+use_collision = true
+material = SubResource("M_wood")
+
+[node name="TreeTrunk" type="CSGBox3D" parent="Yard" unique_id=438481253]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 1.6, -30)
+use_collision = true
+size = Vector3(0.7, 3.2, 0.7)
+material = SubResource("M_wood")
+
+[node name="TreeCrown" type="CSGBox3D" parent="Yard" unique_id=1663767195]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 4.6, -30)
+use_collision = true
+size = Vector3(3.4, 3, 3.4)
+material = SubResource("M_leaf")
+
+[node name="TreeCrownTop" type="CSGBox3D" parent="Yard" unique_id=849448688]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47, 6.6, -30)
+use_collision = true
+size = Vector3(2.2, 1.6, 2.2)
+material = SubResource("M_leaf")
+
+[node name="Cliffs" type="Node3D" parent="." unique_id=220485539]
+
+[node name="BackWall" type="CSGBox3D" parent="Cliffs" unique_id=176800588]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 6, -52)
+use_collision = true
+size = Vector3(100, 12, 8)
+material = SubResource("M_cliff")
+
+[node name="WestWall" type="CSGBox3D" parent="Cliffs" unique_id=1165331852]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 6, -14)
+use_collision = true
+size = Vector3(8, 12, 86)
+material = SubResource("M_cliff")
+
+[node name="BackBlock" type="CSGBox3D" parent="Cliffs" unique_id=510993620]
+transform = Transform3D(0.9693, 0, 0.2458, 0, 1, 0, -0.2458, 0, 0.9693, -38, 7.869, -47.36)
+use_collision = true
+size = Vector3(8.43387, 15.7388, 5.86883)
+material = SubResource("M_cliff")
+
+[node name="BackBlock2" type="CSGBox3D" parent="Cliffs" unique_id=460700609]
+transform = Transform3D(0.9984, 0, -0.05694, 0, 1, 0, 0.05694, 0, 0.9984, -32.4, 3.148, -46.57)
+use_collision = true
+size = Vector3(8.26451, 6.29571, 5.54218)
+material = SubResource("M_cliff")
+
+[node name="BackBlock3" type="CSGBox3D" parent="Cliffs" unique_id=124362319]
+transform = Transform3D(0.9531, 0, 0.3026, 0, 1, 0, -0.3026, 0, 0.9531, -26.8, 6.014, -46.38)
+use_collision = true
+size = Vector3(7.19098, 12.028, 5.18837)
+material = SubResource("M_cliff")
+
+[node name="BackBlock4" type="CSGBox3D" parent="Cliffs" unique_id=832498967]
+transform = Transform3D(0.9982, 0, -0.0597, 0, 1, 0, 0.0597, 0, 0.9982, -21.2, 3.633, -45.46)
+use_collision = true
+size = Vector3(6.71037, 7.26555, 5.94244)
+material = SubResource("M_cliff")
+
+[node name="BackBlock5" type="CSGBox3D" parent="Cliffs" unique_id=1326871411]
+transform = Transform3D(0.9841, 0, 0.1777, 0, 1, 0, -0.1777, 0, 0.9841, -15.6, 4.993, -46.6)
+use_collision = true
+size = Vector3(8.17752, 9.98503, 7.09698)
+material = SubResource("M_cliff")
+
+[node name="BackBlock6" type="CSGBox3D" parent="Cliffs" unique_id=1618616311]
+transform = Transform3D(0.9891, 0, 0.1475, 0, 1, 0, -0.1475, 0, 0.9891, -10, 5.659, -45.92)
+use_collision = true
+size = Vector3(8.50055, 11.3187, 7.18834)
+material = SubResource("M_cliff")
+
+[node name="BackBlock7" type="CSGBox3D" parent="Cliffs" unique_id=925852018]
+transform = Transform3D(0.9706, 0, 0.2406, 0, 1, 0, -0.2406, 0, 0.9706, -4.4, 7.891, -47.15)
+use_collision = true
+size = Vector3(6.67249, 15.7819, 7.27142)
+material = SubResource("M_cliff")
+
+[node name="BackBlock8" type="CSGBox3D" parent="Cliffs" unique_id=824481714]
+transform = Transform3D(0.9987, 0, -0.05096, 0, 1, 0, 0.05096, 0, 0.9987, 1.2, 5.189, -47.38)
+use_collision = true
+size = Vector3(7.67286, 10.3786, 7.29371)
+material = SubResource("M_cliff")
+
+[node name="BackBlock9" type="CSGBox3D" parent="Cliffs" unique_id=494353415]
+transform = Transform3D(0.9984, 0, -0.05575, 0, 1, 0, 0.05575, 0, 0.9984, 6.8, 7.315, -46.56)
+use_collision = true
+size = Vector3(7.78118, 14.6303, 6.78311)
+material = SubResource("M_cliff")
+
+[node name="BackBlock10" type="CSGBox3D" parent="Cliffs" unique_id=575329405]
+transform = Transform3D(0.9934, 0, -0.1143, 0, 1, 0, 0.1143, 0, 0.9934, 12.4, 5.009, -44.98)
+use_collision = true
+size = Vector3(8.77872, 10.0183, 6.4223)
+material = SubResource("M_cliff")
+
+[node name="BackBlock11" type="CSGBox3D" parent="Cliffs" unique_id=2044740618]
+transform = Transform3D(0.9749, 0, -0.2229, 0, 1, 0, 0.2229, 0, 0.9749, 18, 2.834, -45.4)
+use_collision = true
+size = Vector3(7.58852, 5.66736, 7.97929)
+material = SubResource("M_cliff")
+
+[node name="BackBlock12" type="CSGBox3D" parent="Cliffs" unique_id=286605493]
+transform = Transform3D(0.9996, 0, 0.02674, 0, 1, 0, -0.02674, 0, 0.9996, 23.6, 4.065, -46.34)
+use_collision = true
+size = Vector3(7.67461, 8.13055, 5.06769)
+material = SubResource("M_cliff")
+
+[node name="BackBlock13" type="CSGBox3D" parent="Cliffs" unique_id=410708167]
+transform = Transform3D(0.9667, 0, 0.2559, 0, 1, 0, -0.2559, 0, 0.9667, 29.2, 3.424, -47.15)
+use_collision = true
+size = Vector3(5.23582, 6.84853, 7.3047)
+material = SubResource("M_cliff")
+
+[node name="BackBlock14" type="CSGBox3D" parent="Cliffs" unique_id=459487547]
+transform = Transform3D(0.9994, 0, 0.03547, 0, 1, 0, -0.03547, 0, 0.9994, 34.8, 3.862, -46.33)
+use_collision = true
+size = Vector3(8.48569, 7.72376, 5.24174)
+material = SubResource("M_cliff")
+
+[node name="WestBlock" type="CSGBox3D" parent="Cliffs" unique_id=947585737]
+transform = Transform3D(0.9881, 0, 0.1541, 0, 1, 0, -0.1541, 0, 0.9881, -34.85, 4.972, -44)
+use_collision = true
+size = Vector3(7.45784, 9.94496, 8.45594)
+material = SubResource("M_cliff")
+
+[node name="WestBlock2" type="CSGBox3D" parent="Cliffs" unique_id=1054243718]
+transform = Transform3D(0.9705, 0, 0.2413, 0, 1, 0, -0.2413, 0, 0.9705, -36.42, 4.369, -35)
+use_collision = true
+size = Vector3(7.65258, 8.73767, 8.83092)
+material = SubResource("M_cliff")
+
+[node name="WestBlock3" type="CSGBox3D" parent="Cliffs" unique_id=843640492]
+transform = Transform3D(0.9981, 0, -0.06218, 0, 1, 0, 0.06218, 0, 0.9981, -36.8, 3.293, -26)
+use_collision = true
+size = Vector3(5.70001, 6.58596, 6.93985)
+material = SubResource("M_cliff")
+
+[node name="WestBlock4" type="CSGBox3D" parent="Cliffs" unique_id=1756420110]
+transform = Transform3D(0.9989, 0, -0.0463, 0, 1, 0, 0.0463, 0, 0.9989, -37.49, 3.682, -17)
+use_collision = true
+size = Vector3(6.25684, 7.36472, 6.47701)
+material = SubResource("M_cliff")
+
+[node name="WestBlock5" type="CSGBox3D" parent="Cliffs" unique_id=129331868]
+transform = Transform3D(0.9924, 0, -0.1227, 0, 1, 0, 0.1227, 0, 0.9924, -35.43, 6.789, -8)
+use_collision = true
+size = Vector3(6.54647, 13.5779, 7.47037)
+material = SubResource("M_cliff")
+
+[node name="WestBlock6" type="CSGBox3D" parent="Cliffs" unique_id=618342774]
+transform = Transform3D(0.9785, 0, -0.2065, 0, 1, 0, 0.2065, 0, 0.9785, -34.8, 2.743, 1)
+use_collision = true
+size = Vector3(7.33991, 5.48594, 8.49805)
+material = SubResource("M_cliff")
+
+[node name="WestBlock7" type="CSGBox3D" parent="Cliffs" unique_id=305649853]
+transform = Transform3D(0.9537, 0, 0.3009, 0, 1, 0, -0.3009, 0, 0.9537, -36.3, 4.266, 10)
+use_collision = true
+size = Vector3(5.31061, 8.53141, 7.53716)
+material = SubResource("M_cliff")
+
+[node name="WestBlock8" type="CSGBox3D" parent="Cliffs" unique_id=1338174777]
+transform = Transform3D(0.9516, 0, 0.3073, 0, 1, 0, -0.3073, 0, 0.9516, -36.87, 2.803, 19)
+use_collision = true
+size = Vector3(5.48691, 5.60613, 6.36021)
+material = SubResource("M_cliff")
+
+[node name="Player" parent="." unique_id=1498930101 instance=ExtResource("1_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.1, 7)
+
+[node name="IsoCamera" type="Camera3D" parent="." unique_id=435711982]
+transform = Transform3D(0.7071, 0.3415, -0.6192, 0, 0.8756, 0.483, 0.7071, -0.3415, 0.6192, -34, 34, 38)
+current = true
+fov = 40.0
+far = 400.0
+
+[node name="CrazyTubes" parent="." unique_id=1388176240 instance=ExtResource("3_jossx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46.36429, -44.095253, 39.544365)

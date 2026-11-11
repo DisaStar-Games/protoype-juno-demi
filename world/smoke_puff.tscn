@@ -1,0 +1,37 @@
+[gd_scene format=3]
+
+[sub_resource type="Gradient" id="Gradient_smoke"]
+offsets = PackedFloat32Array(0, 0.2, 1)
+colors = PackedColorArray(0.14, 0.14, 0.15, 0, 0.16, 0.16, 0.17, 0.92, 0.06, 0.06, 0.07, 0)
+
+[sub_resource type="Curve" id="Curve_smoke"]
+_data = [Vector2(0, 0.5), 0.0, 0.0, 0, 0, Vector2(1, 2.2), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_smoke"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_smoke"]
+material = SubResource("StandardMaterial3D_smoke")
+size = Vector3(0.3, 0.3, 0.3)
+
+[node name="SmokePuff" type="CPUParticles3D"]
+amount = 40
+lifetime = 2.4
+local_coords = false
+mesh = SubResource("BoxMesh_smoke")
+emission_shape = 1
+emission_sphere_radius = 0.15
+direction = Vector3(0, 1, 0)
+spread = 18.0
+gravity = Vector3(0, 0.6, 0)
+initial_velocity_min = 0.4
+initial_velocity_max = 0.9
+angle_max = 180.0
+scale_amount_min = 0.8
+scale_amount_max = 1.4
+scale_amount_curve = SubResource("Curve_smoke")
+color_ramp = SubResource("Gradient_smoke")

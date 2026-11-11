@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://events/track_split_event.gd" id="1_event"]
+[ext_resource type="PackedScene" path="res://events/hazard_marker.tscn" id="2_marker"]
+
+[node name="TrackSplitEvent" type="Node3D"]
+script = ExtResource("1_event")
+id = &"track_split"
+category = 1
+display_name = "Junction"
+fail_time_penalty = 0.0
+
+[node name="HazardMarker" parent="." instance=ExtResource("2_marker")]
+color = Color(0.3, 1, 0.5, 1)

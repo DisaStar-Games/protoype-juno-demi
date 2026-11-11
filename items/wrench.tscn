@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://dy2wy3gj3njre"]
+
+[ext_resource type="PackedScene" path="res://interactables/item_pickup.tscn" id="1_item"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wrench"]
+albedo_color = Color(0.27, 0.23976001, 0.21330002, 1)
+roughness = 0.75
+
+[sub_resource type="BoxMesh" id="BoxMesh_wrench"]
+material = SubResource("StandardMaterial3D_wrench")
+size = Vector3(0.45, 0.08, 0.12)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wrench"]
+size = Vector3(0.45, 0.08, 0.12)
+
+[node name="Wrench" unique_id=1090615965 instance=ExtResource("1_item")]
+item_id = &"wrench"
+display_name = "Wrench"
+
+[node name="MeshInstance3D" parent="." index="0"]
+mesh = SubResource("BoxMesh_wrench")
+
+[node name="CollisionShape3D" parent="." index="1"]
+shape = SubResource("BoxShape3D_wrench")

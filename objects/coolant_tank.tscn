@@ -1,0 +1,70 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://objects/coolant_tank.gd" id="1_res"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tank"]
+albedo_color = Color(0.2, 0.35, 0.85, 1)
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_tank"]
+material = SubResource("StandardMaterial3D_tank")
+size = Vector3(0.8, 1.2, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tank"]
+size = Vector3(0.8, 1.2, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gauge_bg"]
+shading_mode = 0
+albedo_color = Color(0.02, 0.02, 0.04, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gauge_bg"]
+material = SubResource("StandardMaterial3D_gauge_bg")
+size = Vector3(0.16, 1.0, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gauge_fill"]
+size = Vector3(0.1, 1.0, 0.02)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_drip"]
+shading_mode = 0
+albedo_color = Color(0.45, 0.65, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_drip"]
+material = SubResource("StandardMaterial3D_drip")
+size = Vector3(0.05, 0.08, 0.05)
+
+[node name="CoolantTank" type="StaticBody3D"]
+script = ExtResource("1_res")
+repair_time = 2.0
+action_text = "Refill the coolant tank"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("BoxShape3D_tank")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+mesh = SubResource("BoxMesh_tank")
+
+[node name="LevelBackground" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.6, -0.405)
+mesh = SubResource("BoxMesh_gauge_bg")
+
+[node name="LevelPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.1, -0.415)
+
+[node name="Fill" type="MeshInstance3D" parent="LevelPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_gauge_fill")
+
+[node name="Drips" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.9, -0.43)
+emitting = false
+amount = 14
+lifetime = 0.8
+local_coords = false
+mesh = SubResource("BoxMesh_drip")
+direction = Vector3(0, -1, -0.2)
+spread = 8.0
+gravity = Vector3(0, -6, 0)
+initial_velocity_min = 0.3
+initial_velocity_max = 0.8

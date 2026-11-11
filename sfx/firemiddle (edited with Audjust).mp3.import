@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cv8u5jxoj6eec"
+path="res://.godot/imported/firemiddle (edited with Audjust).mp3-4b067da618f6d78f9c4896491bce021f.mp3str"
+
+[deps]
+
+source_file="res://sfx/firemiddle (edited with Audjust).mp3"
+dest_files=["res://.godot/imported/firemiddle (edited with Audjust).mp3-4b067da618f6d78f9c4896491bce021f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c472hvr5ood0l"]
 
 [ext_resource type="PackedScene" uid="uid://jyncanbkjjnq" path="res://player/player.tscn" id="1_o5qli"]
-[ext_resource type="PackedScene" path="res://objects/coal.tscn" id="2_coal"]
+[ext_resource type="PackedScene" path="res://items/coal.tscn" id="2_coal"]
 [ext_resource type="PackedScene" path="res://objects/furnace.tscn" id="3_furnace"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]

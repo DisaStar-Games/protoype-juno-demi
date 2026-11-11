@@ -1,0 +1,46 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
+albedo_color = Color(0.14, 0.11, 0.09, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_pole"]
+material = SubResource("StandardMaterial3D_wood")
+size = Vector3(0.25, 8, 0.25)
+
+[sub_resource type="BoxMesh" id="BoxMesh_arm"]
+material = SubResource("StandardMaterial3D_wood")
+size = Vector3(2, 0.12, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lamp"]
+shading_mode = 0
+albedo_color = Color(1, 0.75, 0.35, 1)
+emission_enabled = true
+emission = Color(1, 0.7, 0.3, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_lamp"]
+material = SubResource("StandardMaterial3D_lamp")
+size = Vector3(0.3, 0.3, 0.3)
+
+[node name="TelegraphPole" type="Node3D"]
+
+[node name="Pole" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+mesh = SubResource("BoxMesh_pole")
+
+[node name="CrossArm" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.3, 0)
+mesh = SubResource("BoxMesh_arm")
+
+[node name="Lamp" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.2, 0)
+mesh = SubResource("BoxMesh_lamp")
+
+[node name="LampLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.9, 0)
+light_color = Color(1, 0.62, 0.28, 1)
+light_energy = 3.0
+light_volumetric_fog_energy = 2.0
+omni_range = 11.0
+omni_attenuation = 1.5

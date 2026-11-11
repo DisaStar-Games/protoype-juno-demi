@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://doqjys52tjj5v"]
+
+[sub_resource type="FogMaterial" id="Fog_thick"]
+density = 0.08
+albedo = Color(0.55, 0.6, 0.7, 1)
+emission = Color(0.07, 0.09, 0.14, 1)
+edge_fade = 0.2
+
+[sub_resource type="FogMaterial" id="Fog_carve"]
+density = -2.0
+
+[node name="OutsideFog" type="Node3D" unique_id=837868114]
+
+[node name="Fog" type="FogVolume" parent="." unique_id=91411238]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 20)
+size = Vector3(70, 16, 130)
+material = SubResource("Fog_thick")
+
+[node name="TrainInterior" type="FogVolume" parent="." unique_id=796095623]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.6, 8.061719)
+size = Vector3(4.5, 10.4, 64.876564)
+material = SubResource("Fog_carve")

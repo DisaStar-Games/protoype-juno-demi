@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://02a721u4iavv"]
+
+[ext_resource type="PackedScene" uid="uid://1tdu06n3x2wo" path="res://3dmodel/CrazyTubes.glb" id="1_a7ue7"]
+
+[node name="CrazyTubes" unique_id=753393020 instance=ExtResource("1_a7ue7")]
+
+[node name="Cube_005" parent="." index="0" unique_id=43116626]
+transform = Transform3D(2.7068672, 1.2731225, -0.80317396, 0.06724084, 2.1977963, 2.4356844, 1.2916465, -2.7824605, 1.5563918, 0, 0, 0)

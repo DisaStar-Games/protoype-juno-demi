@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://events/coolant_leak_event.gd" id="1_event"]
+
+[node name="CoolantLeakEvent" type="Node3D"]
+script = ExtResource("1_event")
+id = &"coolant_leak"
+display_name = "Coolant leak"
+category = 0
+warning_distance = 0.0

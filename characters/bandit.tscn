@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://characters/figure.tscn" id="1_figure"]
+[ext_resource type="Script" path="res://characters/bandit.gd" id="2_bandit"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_carry"]
+size = Vector3(0.22, 0.22, 0.22)
+
+[node name="Bandit" instance=ExtResource("1_figure")]
+script = ExtResource("2_bandit")
+
+[node name="Carry" type="MeshInstance3D" parent="Visual" index="8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, -0.3)
+visible = false
+mesh = SubResource("BoxMesh_carry")

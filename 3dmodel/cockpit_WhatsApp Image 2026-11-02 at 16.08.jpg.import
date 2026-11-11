@@ -1,0 +1,44 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://byfbftk5s37bs"
+path.s3tc="res://.godot/imported/cockpit_WhatsApp Image 2026-11-02 at 16.08.jpg-ef01b71e9b6d1f629915a23f0b651369.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "5f3f912916cfbd7fc72ee37e757fb2bd"
+}
+
+[deps]
+
+source_file="res://3dmodel/cockpit_WhatsApp Image 2026-11-02 at 16.08.jpg"
+dest_files=["res://.godot/imported/cockpit_WhatsApp Image 2026-11-02 at 16.08.jpg-ef01b71e9b6d1f629915a23f0b651369.s3tc.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

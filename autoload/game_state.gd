@@ -1,0 +1,114 @@
+extends Node
+
+## Run state: the delivery countdown, winning (reach the end of the route) and losing
+## (too late). When a run ends, the train is frozen and `game_over` fires; the end screen
+## (ui/end_screen.tscn) listens to it. Autoload `GameState`.
+
+enum State { RUNNING, WON, LOST }
+
+signal time_left_changed(seconds: float)
+## One-line status message for the HUD ("Track switch set to B"). Milestone 10 turns this into a log.
+signal message_posted(text: String)
+signal state_changed(state: State)
+## The train passed a checkpoint of the route (index into `checkpoint_ratios`).
+signal checkpoint_reached(index: int, checkpoint_name: String)
+## Seconds were taken off the timer (a failed event). The HUD flashes red on it.
+signal penalty_applied(seconds: float, reason: String)
+## The run ended. `won` is true on arrival; `reason` is a short line for the end screen.
+signal game_over(won: bool, reason: String)
+
+@export var delivery_time := 420.0 # 7:00
+## The delivery countdown is switched off for now: no timer, no "late" loss, no time penalties.
+@export var delivery_timer_enabled := false
+## Distance (TrainState units) that counts as arrived; the dashboard shows progress to it.
+@export var route_length := 6000.0
+
+## Where the checkpoints are, as a fraction of the route, and their names (shown on the map).
+## Every checkpoint brings bandits for now (EventManager).
+var checkpoint_ratios: Array[float] = [0.28, 0.6, 0.85]
+var checkpoint_names: Array[String] = ["MARSH", "HOLLOW", "DEPOT"]
+
+var state := State.RUNNING
+var next_checkpoint := 0
+var time_left := delivery_time
+
+
+func _ready() -> void:
+	time_left = delivery_time
+
+
+func _physics_process(delta: float) -> void:
+	tick(delta)
+
+
+## Separate from _physics_process so tests can drive it.
+func tick(delta: float) -> void:
+	if state != State.RUNNING:
+		return
+
+	# Arriving wins even if the timer runs out on the same frame.
+	if TrainState.distance >= route_length:
+		end_run(true, "Delivered on time")
+		return
+
+	while next_checkpoint < checkpoint_ratios.size() and TrainState.distance >= route_length * checkpoint_ratios[next_checkpoint]:
+		checkpoint_reached.emit(next_checkpoint, checkpoint_names[next_checkpoint])
+		next_checkpoint += 1
+
+	if not delivery_timer_enabled:
+		return
+	var before := ceili(time_left)
+	time_left = maxf(time_left - delta, 0.0)
+	if ceili(time_left) != before:
+		time_left_changed.emit(time_left) # once per displayed second
+	if time_left <= 0.0:
+		end_run(false, "Late delivery")
+
+
+## Ends the run (once) and freezes the train. Also used by the debug panel.
+func end_run(won: bool, reason: String) -> void:
+	if state != State.RUNNING:
+		return
+	state = State.WON if won else State.LOST
+	TrainState.frozen = true
+	state_changed.emit(state)
+	game_over.emit(won, reason)
+
+
+func post_message(text: String) -> void:
+	message_posted.emit(text)
+
+
+## Takes seconds off the delivery timer. Running out ends the run on the next tick.
+func apply_time_penalty(seconds: float, reason: String) -> void:
+	if state != State.RUNNING or not delivery_timer_enabled:
+		return
+	time_left = maxf(time_left - seconds, 0.0)
+	time_left_changed.emit(time_left)
+	post_message("%s: -%d s" % [reason, roundi(seconds)])
+	penalty_applied.emit(seconds, reason)
+
+
+## Back to a running run, same scene (the debug panel uses this).
+func reset() -> void:
+	state = State.RUNNING
+	next_checkpoint = 0
+	time_left = delivery_time
+	TrainState.frozen = false
+	Inventory.reset()
+	time_left_changed.emit(time_left)
+	state_changed.emit(state)
+
+
+## Full restart: fresh state and a freshly loaded scene, so no stray coal or items
+## stay behind and the player is back at the spawn.
+func restart() -> void:
+	reset()
+	TrainState.reset()
+	get_tree().reload_current_scene()
+
+
+## "MM:SS" for dashboards and the debug panel.
+func format_time(seconds: float = time_left) -> String:
+	var total := ceili(seconds)
+	return "%02d:%02d" % [total / 60, total % 60]

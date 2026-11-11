@@ -1,0 +1,98 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://cockpit/dashboard.gd" id="1_dash"]
+[ext_resource type="PackedScene" path="res://cockpit/gauge.tscn" id="2_gauge"]
+[ext_resource type="PackedScene" path="res://cockpit/warning_light.tscn" id="3_light"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_panel"]
+albedo_color = Color(0.05, 0.055, 0.07, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_panel"]
+material = SubResource("StandardMaterial3D_panel")
+size = Vector3(2.2, 1.1, 0.04)
+
+[node name="Dashboard" type="Node3D"]
+script = ExtResource("1_dash")
+
+[node name="Panel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.03)
+mesh = SubResource("BoxMesh_panel")
+
+[node name="SpeedGauge" parent="." instance=ExtResource("2_gauge")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0.37, 0)
+title = "SPEED"
+fill_color = Color(0.3, 0.8, 1, 1)
+show_bar = true
+
+[node name="FuelGauge" parent="." instance=ExtResource("2_gauge")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.37, 0)
+title = "FUEL"
+fill_color = Color(1, 0.6, 0.15, 1)
+show_bar = true
+
+[node name="CoolantGauge" parent="." instance=ExtResource("2_gauge")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0.37, 0)
+title = "COOLANT"
+fill_color = Color(0.4, 0.55, 1, 1)
+show_bar = true
+
+[node name="TempGauge" parent="." instance=ExtResource("2_gauge")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0.0, 0)
+title = "FURNACE"
+fill_color = Color(0.35, 0.9, 0.4, 1)
+show_bar = true
+
+[node name="TimerGauge" parent="." instance=ExtResource("2_gauge")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.0, 0)
+title = "DELIVERY"
+fill_color = Color(1, 1, 1, 1)
+show_bar = false
+
+[node name="RouteGauge" parent="." instance=ExtResource("2_gauge")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0.0, 0)
+title = "ROUTE"
+fill_color = Color(0.5, 1, 0.5, 1)
+show_bar = true
+
+[node name="CoolantLight" parent="." instance=ExtResource("3_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.875, -0.36, 0)
+warning_id = &"coolant"
+title = "COOLANT"
+color = Color(1, 0.2, 0.2, 1)
+
+[node name="FireLight" parent="." instance=ExtResource("3_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.525, -0.36, 0)
+warning_id = &"fire"
+title = "FIRE"
+color = Color(1, 0.5, 0.1, 1)
+
+[node name="GasLight" parent="." instance=ExtResource("3_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, -0.36, 0)
+warning_id = &"gas"
+title = "GAS"
+color = Color(0.3, 1, 0.4, 1)
+
+[node name="FuelLight" parent="." instance=ExtResource("3_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.175, -0.36, 0)
+warning_id = &"fuel"
+title = "FUEL"
+color = Color(1, 0.85, 0.1, 1)
+
+[node name="TempLight" parent="." instance=ExtResource("3_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.525, -0.36, 0)
+warning_id = &"temp"
+title = "TEMP"
+color = Color(1, 0.35, 0.15, 1)
+
+[node name="DamageLight" parent="." instance=ExtResource("3_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.875, -0.36, 0)
+warning_id = &"damage"
+title = "CONSOLE"
+color = Color(0.95, 0.25, 0.85, 1)

@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="RouteData" format=3 uid="uid://c5p8ciw1ibsul"]
+
+[ext_resource type="Script" uid="uid://dofei7ovndqbc" path="res://events/route_data.gd" id="1_route"]
+[ext_resource type="Script" uid="uid://dtq2nt5qcqo0r" path="res://events/route_entry.gd" id="2_entry"]
+[ext_resource type="PackedScene" path="res://events/coolant_leak_event.tscn" id="3_brake"]
+[ext_resource type="PackedScene" path="res://events/gas_leak_event.tscn" id="4_gas"]
+[ext_resource type="PackedScene" path="res://events/people_event.tscn" id="5_people"]
+[ext_resource type="PackedScene" path="res://events/slow_train_event.tscn" id="6_slow"]
+[ext_resource type="PackedScene" path="res://events/bandits_event.tscn" id="7_bandits"]
+[ext_resource type="PackedScene" path="res://events/track_split_event.tscn" id="8_split"]
+
+[sub_resource type="Resource" id="Resource_0"]
+script = ExtResource("2_entry")
+event_scene = ExtResource("3_brake")
+
+[sub_resource type="Resource" id="Resource_1"]
+script = ExtResource("2_entry")
+event_scene = ExtResource("5_people")
+trigger_distance = 1600.0
+
+[sub_resource type="Resource" id="Resource_2"]
+script = ExtResource("2_entry")
+event_scene = ExtResource("6_slow")
+trigger_distance = 2000.0
+
+[sub_resource type="Resource" id="Resource_3"]
+script = ExtResource("2_entry")
+event_scene = ExtResource("4_gas")
+trigger_distance = 2600.0
+
+[sub_resource type="Resource" id="Resource_4"]
+script = ExtResource("2_entry")
+event_scene = ExtResource("7_bandits")
+trigger_distance = 3300.0
+
+[sub_resource type="Resource" id="Resource_5"]
+script = ExtResource("2_entry")
+event_scene = ExtResource("8_split")
+trigger_distance = 3900.0
+
+[sub_resource type="Resource" id="Resource_6"]
+script = ExtResource("2_entry")
+event_scene = ExtResource("3_brake")
+trigger_distance = 4300.0
+
+[resource]
+script = ExtResource("1_route")
+entries = Array[ExtResource("2_entry")]([SubResource("Resource_0"), SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3"), SubResource("Resource_4"), SubResource("Resource_5"), SubResource("Resource_6")])

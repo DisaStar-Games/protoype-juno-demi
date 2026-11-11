@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://ci8fjbwg622nn"]
+
+[ext_resource type="PackedScene" path="res://interactables/item_pickup.tscn" id="1_item"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shovel"]
+albedo_color = Color(0.4, 0.15333334, 0, 1)
+roughness = 0.75
+
+[sub_resource type="BoxMesh" id="BoxMesh_shovel"]
+material = SubResource("StandardMaterial3D_shovel")
+size = Vector3(0.15, 0.1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_shovel"]
+size = Vector3(0.15, 0.1, 1)
+
+[node name="Shovel" unique_id=820294384 instance=ExtResource("1_item")]
+item_id = &"shovel"
+display_name = "Shovel"
+
+[node name="MeshInstance3D" parent="." index="0"]
+mesh = SubResource("BoxMesh_shovel")
+
+[node name="CollisionShape3D" parent="." index="1"]
+shape = SubResource("BoxShape3D_shovel")

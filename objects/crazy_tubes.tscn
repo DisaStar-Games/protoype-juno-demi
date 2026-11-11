@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://c58ekjjwheqqr"]
+
+[ext_resource type="Script" uid="uid://fsb4al4r4bgn" path="res://objects/pulsing_tubes.gd" id="1_pulse"]
+[ext_resource type="PackedScene" uid="uid://1tdu06n3x2wo" path="res://3dmodel/CrazyTubes.glb" id="2_model"]
+
+[node name="CrazyTubes" type="Node3D" unique_id=1584563643]
+script = ExtResource("1_pulse")
+
+[node name="Model" parent="." unique_id=1140047707 instance=ExtResource("2_model")]
+script = ExtResource("1_pulse")

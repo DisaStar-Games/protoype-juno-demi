@@ -26,4 +26,4 @@ mono_crash.*.json
 
 #test
 .idea
-.DS
+.DS_Store
