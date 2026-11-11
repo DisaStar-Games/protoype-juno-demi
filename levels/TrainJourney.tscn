@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" path="res://characters/figure.tscn" id="22_figure"]
 [ext_resource type="PackedScene" path="res://objects/system_repair_point.tscn" id="23_repair"]
 [ext_resource type="PackedScene" path="res://cockpit/message_screen.tscn" id="31_msgscreen"]
+[ext_resource type="PackedScene" path="res://items/shotgun.tscn" id="31_ymb5l"]
 [ext_resource type="PackedScene" path="res://cockpit/journey_screen.tscn" id="32_mapscreen"]
 [ext_resource type="PackedScene" uid="uid://bjqajg43rlmds" path="res://objects/water_barrel.tscn" id="33_water"]
 [ext_resource type="PackedScene" path="res://objects/ammo_crate.tscn" id="34_ammo"]
@@ -725,8 +726,8 @@ omni_range = 10.0
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Lights" unique_id=502961915]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.91025317, 0.36410713, 29.020622)
-light_color = Color(1, 0.5839029, 0.19360998, 1)
-light_energy = 2.2692704
+light_color = Color(1, 0.4990293, 0.15238567, 1)
+light_energy = 1.8812768
 light_volumetric_fog_energy = 9.317
 script = ExtResource("2_4wxrg")
 
@@ -919,3 +920,12 @@ system_id = &"controls"
 title = "CONSOLE"
 
 [node name="OutsideFog" parent="." unique_id=1450641922 instance=ExtResource("61_fog")]
+
+[node name="Shotgun" parent="." unique_id=1842576200 instance=ExtResource("31_ymb5l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5145547, 1.8457303, 3.8612976)
+pellets = 8
+pellet_damage = 0.35
+spread_degrees = 4.0
+shot_range = 60.0
+shells_per_load = 2
+reload_time = 2.0
